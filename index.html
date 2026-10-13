@@ -82,6 +82,7 @@
     border: 3px dashed var(--pasto-claro); border-radius: 1rem; cursor: pointer; color: var(--pasto); font-weight: 700; overflow: hidden;
   }
   .elegir img { max-width: 100%; max-height: 20rem; border-radius: .6rem; display: block; }
+  .elegir .icono { display: block; width: 2.75rem; height: 2.75rem; margin: 0 auto .35rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   .elegir small { font-weight: 400; color: #4a5a50; }
   .elegir:focus-within { outline: 3px solid var(--oro); outline-offset: 3px; }
   .oculto-visual { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
@@ -111,14 +112,14 @@
     border: 2px solid var(--tinta); border-radius: 999px; background: #fff; color: var(--tinta);
     font: 700 1.05rem var(--f-texto); font-variant-numeric: tabular-nums; cursor: pointer; transition: transform .12s;
   }
-  .like svg { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 2; }
+  .like svg { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .like[aria-pressed=true] { background: #e0245e; border-color: #e0245e; color: #fff; }
   .like[aria-pressed=true] svg { fill: currentColor; }
   .like:active { transform: scale(.92); }
   .lider { outline: 4px solid var(--oro); }
   .lider::before {
-    content: "🏆 Va ganando"; position: absolute; z-index: 1; top: -.7rem; left: .6rem; padding: .15em .8em .1em;
-    background: var(--oro); color: var(--tinta); font-family: var(--f-titulo); font-size: 1.15rem; letter-spacing: .05em;
+    content: "Va ganando"; position: absolute; z-index: 1; top: -.7rem; left: .6rem; padding: .15em .8em .1em 2em;
+    background: var(--oro) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0'/%3E%3C/svg%3E") .6em 45% / 1.1em no-repeat; color: var(--tinta); font-family: var(--f-titulo); font-size: 1.15rem; letter-spacing: .05em;
     border-radius: .4rem; transform: rotate(-3deg);
   }
 
@@ -148,7 +149,7 @@
     <form id="form">
       <label class="elegir" id="elegir">
         <input class="oculto-visual" type="file" id="archivo" accept="image/*">
-        <span id="elegir-texto">📸 Toca para tomar o elegir la foto<br><small>Cámara o galería</small></span>
+        <span id="elegir-texto"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>Toca para tomar o elegir la foto<br><small>Cámara o galería</small></span>
         <img id="previa" alt="Vista previa de tu foto" hidden>
       </label>
       <label class="campo">¿Quién sale en la foto?
@@ -234,7 +235,7 @@
     var quien = document.createElement('span'); quien.className = 'quien'; quien.textContent = f.nombre;
     if (misFotos.has(f.id)) { var mia = document.createElement('span'); mia.className = 'mia'; mia.textContent = 'Tu foto'; quien.appendChild(mia); }
     var like = document.createElement('button'); like.type = 'button'; like.className = 'like';
-    like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.6 1 5.4 3 1.8-2 3.4-3 5.4-3 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg><span></span>';
+    like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg><span></span>';
     like.addEventListener('click', function () { darLike(f.id); });
     pie.appendChild(quien); pie.appendChild(like);
     li.appendChild(ver); li.appendChild(pie);
