@@ -398,7 +398,7 @@
       g.style.setProperty('--r', (-Math.random() * d) + 's');
       capa.appendChild(g);
     }
-    var balones = window.innerWidth < 640 ? 4 : 7;
+    var balones = window.innerWidth < 640 ? 2 : 4;
     for (var k = 0; k < balones; k++) {
       var b = document.createElement('span'), dura = 7 + Math.random() * 8, alto = 8 + (k + Math.random() * .8) * (84 / balones);
       b.className = 'balon'; b.appendChild(document.createElement('i'));
