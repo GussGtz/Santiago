@@ -185,9 +185,45 @@
   .festejo span { font-size: .95rem; overflow-wrap: anywhere; }
   .confeti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 19; pointer-events: none; }
 
+  /* Subiendo: el recuadro late y el botón gira */
+  .subiendo .elegir { border-style: solid; animation: sube-late 1s ease-in-out infinite; }
+  .subiendo .elegir img { animation: sube-foto 1s ease-in-out infinite alternate; }
+  @keyframes sube-late { 50% { border-color: var(--oro); box-shadow: 0 0 0 .35rem rgba(240,180,60,.3); } }
+  @keyframes sube-foto { from { opacity: .55; scale: .97; } to { opacity: 1; scale: 1; } }
+  .subiendo #enviar::before { content: ""; width: 1.1em; height: 1.1em; border-radius: 50%; border: .18em solid rgba(251,253,249,.4); border-top-color: var(--cal); animation: gira .7s linear infinite; }
+  @keyframes gira { to { rotate: 360deg; } }
+
+  /* Foto publicada: cae como polaroid, sello de palomita y vuela a la galería */
+  .publicada {
+    position: fixed; inset: 0; z-index: 18; display: grid; place-content: center; justify-items: center; gap: 1rem; padding: 1.5rem;
+    background: rgba(21,58,39,.9); text-align: center; cursor: pointer; animation: pub-fondo .3s ease-out both;
+  }
+  .publicada .polaroid {
+    position: relative; background: var(--cal); padding: .6rem .6rem 2.6rem; border-radius: .3rem; rotate: -4deg;
+    box-shadow: 0 1.2rem 2.5rem rgba(0,0,0,.5); animation: pub-cae .8s cubic-bezier(.2,1.25,.4,1) both;
+  }
+  .publicada .polaroid img { display: block; width: min(62vw, 16rem); aspect-ratio: 4 / 5; object-fit: cover; border-radius: .15rem; background: #dfe9e2; }
+  .publicada .sello {
+    position: absolute; right: -1.1rem; bottom: -1.1rem; width: 4.2rem; height: 4.2rem; padding: .9rem; border-radius: 50%;
+    background: var(--oro); border: .25rem solid var(--tinta); fill: none; stroke: var(--tinta); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+    animation: pub-sello .5s .65s cubic-bezier(.2,1.8,.4,1) both;
+  }
+  .publicada .sello path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: pub-palomita .35s 1s ease-out forwards; }
+  .publicada strong { font-family: var(--f-nombre); font-weight: 400; font-size: clamp(1.6rem, 8vw, 2.4rem); line-height: 1.1; color: var(--oro); animation: entra-pop .5s .85s cubic-bezier(.2,1.6,.4,1) both; }
+  .publicada span { font-family: var(--f-mano); font-size: 1.5rem; color: var(--cal); animation: entra-sube .5s 1.05s ease-out both; }
+  .publicada.sale { animation: pub-fondo .45s ease-in reverse both; }
+  .publicada.sale .polaroid { animation: pub-vuela .45s ease-in both; }
+  .publicada.sale strong, .publicada.sale span { animation: none; opacity: 0; }
+  @keyframes pub-fondo { from { opacity: 0; } }
+  @keyframes pub-cae { from { translate: 0 -110vh; rotate: -30deg; } }
+  @keyframes pub-sello { from { scale: 0; rotate: -90deg; } }
+  @keyframes pub-palomita { to { stroke-dashoffset: 0; } }
+  @keyframes pub-vuela { to { translate: 0 70vh; scale: .15; rotate: 12deg; opacity: 0; } }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .globos { display: none; }
+    .publicada .sello path { stroke-dashoffset: 0; }
   }
 </style>
 </head>
@@ -238,6 +274,15 @@
 <div class="festejo" id="festejo" role="status" aria-live="polite">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0"/></svg>
   <div><strong>¡Nueva foto líder!</strong><span id="festejo-texto"></span></div>
+</div>
+
+<div class="publicada" id="publicada" role="status" hidden>
+  <div class="polaroid">
+    <img id="publicada-img" alt="">
+    <svg class="sello" viewBox="0 0 24 24" aria-hidden="true"><path d="m4.5 12.75 6 6 9-13.5"/></svg>
+  </div>
+  <strong>¡Foto publicada!</strong>
+  <span>Ahora pide a todos que voten por ti</span>
 </div>
 
 <dialog id="visor">
@@ -507,12 +552,32 @@
     });
   }
 
+  // La foto recién subida cae como polaroid, recibe su sello y vuela a la galería
+  function celebrarPublicada(nueva) {
+    var capa = $('publicada'), cerrado = false;
+    $('publicada-img').src = previa.src || urlFoto(nueva.ruta);   // la copia local se ve al instante
+    capa.classList.remove('sale'); capa.hidden = false;
+    confeti();
+    function cerrar() {
+      if (cerrado) return; cerrado = true;
+      capa.classList.add('sale');
+      setTimeout(function () {
+        capa.hidden = true; capa.classList.remove('sale');
+        var t = tarjetas[nueva.id];
+        if (t) { t.li.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'center' }); t.li.classList.add('nueva'); }
+      }, sinMovimiento ? 0 : 450);
+    }
+    capa.onclick = cerrar;
+    setTimeout(cerrar, 3200);
+  }
+
   $('form').addEventListener('submit', function (e) {
     e.preventDefault();
     var f = archivo.files[0], quien = nombre.value.trim().replace(/\s+/g, ' ');
     if (!f) { avisar('Primero elige o toma la foto.', 'error'); return; }
     if (quien.length < 2) { avisar('Escribe tu nombre.', 'error'); nombre.focus(); return; }
     enviar.disabled = true; enviar.textContent = 'Subiendo…'; avisar('');
+    $('form').classList.add('subiendo');
     var ruta = uuid() + '.jpg';
     reducir(f).then(function (blob) {
       return api('/storage/v1/object/' + BUCKET + '/' + ruta, { method: 'POST', headers: { 'Content-Type': 'image/jpeg' }, body: blob });
@@ -523,16 +588,16 @@
       });
     }).then(function (filas) {
       var nueva = filas && filas[0];
-      if (nueva) { misFotos.add(nueva.id); guardar('santi-fotos', JSON.stringify(Array.from(misFotos))); fotos.push(nueva); pintar(); confeti(); }
+      if (nueva) { misFotos.add(nueva.id); guardar('santi-fotos', JSON.stringify(Array.from(misFotos))); fotos.push(nueva); pintar(); }
       guardar('santi-nombre', quien);
       archivo.value = ''; previa.hidden = true; $('elegir-texto').hidden = false;
       avisar('¡Listo! Tu foto ya está en la galería. Pide a todos que voten por ella.', 'ok');
-      if (nueva && tarjetas[nueva.id]) tarjetas[nueva.id].li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (nueva) celebrarPublicada(nueva);
     }).catch(function (err) {
       avisar(err.message === 'imagen' || err.message === 'canvas'
         ? 'No pudimos leer esa imagen. Prueba con otra foto.'
         : 'No se pudo subir la foto. Revisa tu conexión e inténtalo de nuevo.', 'error');
-    }).then(function () { enviar.disabled = false; enviar.textContent = 'Subir foto'; });
+    }).then(function () { enviar.disabled = false; enviar.textContent = 'Subir foto'; $('form').classList.remove('subiendo'); });
   });
 
   /* ---------- Arranque ---------- */
