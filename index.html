@@ -127,10 +127,72 @@
   dialog::backdrop { background: rgba(0,0,0,.85); }
   dialog img { max-width: 96vw; max-height: 90vh; display: block; border-radius: .6rem; }
   dialog button { position: fixed; top: .75rem; right: .75rem; }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  /* Animaciones */
+  main { position: relative; z-index: 1; }
+  .globos { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .globo {
+    position: absolute; bottom: -12rem; left: var(--x); width: var(--t); height: calc(var(--t) * 1.22);
+    border-radius: 50% 50% 50% 50% / 45% 45% 55% 55%; opacity: .9;
+    background: radial-gradient(circle at 32% 28%, rgba(255,255,255,.6) 0 8%, transparent 9%), var(--c);
+    box-shadow: inset -.5rem -.6rem 0 rgba(0,0,0,.12);
+    animation: globo-sube var(--d) linear var(--r) infinite, globo-mece 3.5s ease-in-out var(--r) infinite alternate;
+  }
+  .globo::before { content: ""; position: absolute; top: 98%; left: 50%; translate: -50% 0; border: .3rem solid transparent; border-bottom-color: var(--c); border-top: 0; }
+  .globo::after { content: ""; position: absolute; top: calc(100% + .25rem); left: 50%; width: 1.5px; height: 4.5rem; background: rgba(251,253,249,.55); }
+  @keyframes globo-sube { to { translate: 0 -135vh; } }
+  @keyframes globo-mece { from { rotate: -7deg; margin-left: -.7rem; } to { rotate: 7deg; margin-left: .7rem; } }
+
+  .cinta { animation: entra-cinta .7s cubic-bezier(.2,1.5,.4,1) both; }
+  .portada h1 { animation: entra-sube .6s .1s ease-out both; }
+  .portada h1 b { animation: entra-pop .7s .25s cubic-bezier(.2,1.6,.4,1) both; }
+  .portada .lema { animation: entra-sube .6s .5s ease-out both, late 2.2s 1.2s ease-in-out infinite; }
+  .pasos li { animation: entra-sube .55s ease-out both; }
+  .pasos li:nth-child(1) { animation-delay: .55s; } .pasos li:nth-child(2) { animation-delay: .7s; } .pasos li:nth-child(3) { animation-delay: .85s; }
+  .pasos li::before { animation: brinca 2.4s ease-in-out infinite; }
+  .pasos li:nth-child(2)::before { animation-delay: .3s; } .pasos li:nth-child(3)::before { animation-delay: .6s; }
+  .subir { animation: entra-sube .6s 1s ease-out both; }
+  .foto.nueva { animation: entra-pop .5s cubic-bezier(.2,1.4,.4,1) both; }
+  .foto .ver img { transition: transform .3s; }
+  .foto .ver:hover img { transform: scale(1.05); }
+  @keyframes entra-cinta { from { opacity: 0; transform: translateX(-3rem) rotate(-14deg); } }
+  @keyframes entra-sube { from { opacity: 0; transform: translateY(1.2rem); } }
+  @keyframes entra-pop { from { opacity: 0; transform: scale(.6); } }
+  @keyframes late { 50% { scale: 1.06; } }
+  @keyframes brinca { 0%, 60%, 100% { translate: 0 0; } 30% { translate: 0 -.3rem; } }
+
+  /* Like: el corazón salta y suelta corazoncitos */
+  .like.pum svg { animation: pum .45s cubic-bezier(.2,1.8,.4,1); }
+  @keyframes pum { 0% { scale: .4; } 60% { scale: 1.5; } 100% { scale: 1; } }
+  .chispa { position: fixed; z-index: 15; width: 1.1rem; height: 1.1rem; margin: -.55rem 0 0 -.55rem; pointer-events: none; fill: #e0245e; animation: chispa .8s ease-out forwards; }
+  @keyframes chispa { to { translate: var(--dx) var(--dy); rotate: var(--g); scale: .3; opacity: 0; } }
+
+  /* La que va ganando brilla; al rebasar a otra, festeja */
+  .lider { animation: brillo 1.8s ease-in-out infinite; }
+  @keyframes brillo { 50% { box-shadow: 0 6px 0 var(--sombra), 0 0 1.6rem .2rem rgba(240,180,60,.75); } }
+  .lider.festeja { animation: festeja .9s cubic-bezier(.3,1.5,.5,1), brillo 1.8s .9s ease-in-out infinite; z-index: 2; }
+  @keyframes festeja { 0% { scale: 1; rotate: 0deg; } 25% { scale: 1.08; rotate: -3deg; } 50% { scale: 1.1; rotate: 3deg; } 75% { scale: 1.05; rotate: -2deg; } 100% { scale: 1; rotate: 0deg; } }
+  .festejo {
+    position: fixed; z-index: 20; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 1rem); translate: -50% -200%;
+    width: min(92vw, 26rem); display: flex; align-items: center; gap: .8rem; padding: .8rem 1rem;
+    background: var(--tinta); color: var(--cal); border: 3px solid var(--oro); border-radius: 1rem;
+    box-shadow: 0 8px 0 rgba(0,0,0,.35); pointer-events: none; transition: translate .55s cubic-bezier(.2,1.4,.4,1);
+  }
+  .festejo.visible { translate: -50% 0; }
+  .festejo svg { flex: none; width: 2.8rem; height: 2.8rem; fill: none; stroke: var(--oro); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .festejo.visible svg { animation: trofeo .5s ease-in-out infinite alternate; }
+  @keyframes trofeo { from { rotate: -10deg; } to { rotate: 10deg; scale: 1.12; } }
+  .festejo strong { display: block; font-family: var(--f-nombre); font-weight: 400; font-size: 1.2rem; line-height: 1.15; color: var(--oro); }
+  .festejo span { font-size: .95rem; overflow-wrap: anywhere; }
+  .confeti { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 19; pointer-events: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .globos { display: none; }
+  }
 </style>
 </head>
 <body>
+<div class="globos" id="globos" aria-hidden="true"></div>
 <main>
   <section class="portada">
     <span class="cinta">Dinámica de la fiesta</span>
@@ -172,6 +234,11 @@
     <ul class="fotos" id="fotos"></ul>
   </section>
 </main>
+
+<div class="festejo" id="festejo" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0"/></svg>
+  <div><strong>¡Nueva foto líder!</strong><span id="festejo-texto"></span></div>
+</div>
 
 <dialog id="visor">
   <img id="visor-img" alt="">
@@ -224,7 +291,8 @@
   var lista = $('fotos'), vacio = $('vacio');
 
   function crearTarjeta(f) {
-    var li = document.createElement('li'); li.className = 'foto';
+    var li = document.createElement('li'); li.className = 'foto nueva'; li.dataset.id = f.id;
+    li.addEventListener('animationend', function (e) { if (e.target === li) li.classList.remove('nueva', 'festeja'); });
     var ver = document.createElement('button'); ver.type = 'button'; ver.className = 'ver';
     ver.setAttribute('aria-label', 'Ver grande la foto de ' + f.nombre);
     var img = document.createElement('img'); img.loading = 'lazy'; img.alt = 'Foto de ' + f.nombre + ' con Santi'; img.src = urlFoto(f.ruta);
@@ -242,6 +310,92 @@
     return { li: li, like: like, cuenta: like.querySelector('span') };
   }
 
+  /* ---------- Animaciones ---------- */
+  var sinMovimiento = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var COLORES = ['#f0b43c', '#ee9a3a', '#fbfdf9', '#4f9a6c', '#e0245e', '#3aa0ee'];
+
+  (function globos() {
+    if (sinMovimiento) return;
+    var capa = $('globos'), n = window.innerWidth < 640 ? 7 : 12;
+    for (var i = 0; i < n; i++) {
+      var g = document.createElement('i'), d = 13 + Math.random() * 12;
+      g.className = 'globo';
+      g.style.setProperty('--x', (2 + (i + Math.random() * .7) * (94 / n)) + '%');
+      g.style.setProperty('--t', (2.6 + Math.random() * 2) + 'rem');
+      g.style.setProperty('--c', COLORES[i % COLORES.length]);
+      g.style.setProperty('--d', d + 's');
+      g.style.setProperty('--r', (-Math.random() * d) + 's');
+      capa.appendChild(g);
+    }
+  })();
+
+  function confeti() {
+    if (sinMovimiento) return;
+    var c = document.createElement('canvas'), x = c.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = window.innerWidth, h = window.innerHeight, piezas = [], inicio = null, DURA = 3200;
+    c.className = 'confeti'; c.width = w * dpr; c.height = h * dpr; x.scale(dpr, dpr);
+    document.body.appendChild(c);
+    for (var i = 0; i < 140; i++) {
+      var lado = i % 2 ? 1 : -1;   // dos cañones, uno en cada esquina de abajo
+      piezas.push({
+        x: lado > 0 ? 0 : w, y: h * .85, vx: lado * (3 + Math.random() * 9) * (w / 420 + .5), vy: -(9 + Math.random() * 13),
+        t: 5 + Math.random() * 7, g: Math.random() * 6.3, vg: (Math.random() - .5) * .5, c: COLORES[i % COLORES.length]
+      });
+    }
+    function cuadro(ahora) {
+      if (inicio === null) inicio = ahora;
+      var pasado = ahora - inicio;
+      x.clearRect(0, 0, w, h);
+      x.globalAlpha = Math.min(1, (DURA - pasado) / 600);
+      piezas.forEach(function (p) {
+        p.vy += .32; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.g += p.vg;
+        x.save(); x.translate(p.x, p.y); x.rotate(p.g); x.fillStyle = p.c;
+        x.fillRect(-p.t / 2, -p.t / 4, p.t, p.t / 2 * (1 + Math.sin(p.g * 2) * .6)); x.restore();
+      });
+      if (pasado < DURA) requestAnimationFrame(cuadro); else c.remove();
+    }
+    requestAnimationFrame(cuadro);
+  }
+
+  function corazones(boton) {
+    boton.classList.remove('pum'); void boton.offsetWidth; boton.classList.add('pum');
+    if (sinMovimiento) return;
+    var r = boton.getBoundingClientRect();
+    for (var i = 0; i < 7; i++) {
+      var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), a = -Math.PI * (.15 + Math.random() * .7), d = 40 + Math.random() * 45;
+      s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'chispa');
+      s.innerHTML = '<path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>';
+      s.style.left = (r.left + r.width * .3) + 'px'; s.style.top = (r.top + r.height / 2) + 'px';
+      s.style.setProperty('--dx', (Math.cos(a) * d) + 'px'); s.style.setProperty('--dy', (Math.sin(a) * d) + 'px');
+      s.style.setProperty('--g', ((Math.random() - .5) * 90) + 'deg');
+      s.addEventListener('animationend', function () { this.remove(); });
+      document.body.appendChild(s);
+    }
+  }
+
+  var liderId = null, cargado = false, relojFestejo;
+  function festejar(f) {
+    $('festejo-texto').textContent = f.nombre + ' va ganando con ' + f.likes + (f.likes === 1 ? ' like' : ' likes');
+    $('festejo').classList.add('visible');
+    clearTimeout(relojFestejo);
+    relojFestejo = setTimeout(function () { $('festejo').classList.remove('visible'); }, 4500);
+    if (tarjetas[f.id]) tarjetas[f.id].li.classList.add('festeja');
+    confeti();
+  }
+
+  // La líder solo cambia cuando otra foto la rebasa de verdad (un empate no la quita)
+  function revisarLider(maximo) {
+    var actual = fotos.find(function (f) { return f.id === liderId; });
+    if (actual && maximo > 0 && actual.likes === maximo) return;
+    var nueva = null;
+    fotos.forEach(function (f) {
+      if (maximo > 0 && f.likes === maximo && (!nueva || f.creado < nueva.creado)) nueva = f;
+    });
+    var cambio = nueva && nueva.id !== liderId;
+    liderId = nueva ? nueva.id : null;
+    if (cambio && cargado) festejar(nueva);
+  }
+
   function pintar() {
     var ordenadas = fotos.slice().sort(function (a, b) {
       if (orden === 'likes' && b.likes !== a.likes) return b.likes - a.likes;
@@ -257,12 +411,27 @@
       t.like.setAttribute('aria-pressed', gusta);
       t.like.setAttribute('aria-label', (gusta ? 'Quitar mi like a' : 'Dar like a') + ' la foto de ' + f.nombre + ', ' + f.likes + ' likes');
       t.li.classList.toggle('lider', maximo > 0 && f.likes === maximo);
-      lista.appendChild(t.li);
     });
     Object.keys(tarjetas).forEach(function (id) { if (!vivos[id]) { tarjetas[id].li.remove(); delete tarjetas[id]; } });
+
+    // Solo se reacomoda si el orden cambió; las tarjetas se deslizan a su nuevo lugar
+    var enPantalla = Array.prototype.map.call(lista.children, function (li) { return li.dataset.id; }).join();
+    if (enPantalla !== ordenadas.map(function (f) { return f.id; }).join()) {
+      var antes = {};
+      if (!sinMovimiento) Array.prototype.forEach.call(lista.children, function (li) { antes[li.dataset.id] = li.getBoundingClientRect(); });
+      ordenadas.forEach(function (f) { lista.appendChild(tarjetas[f.id].li); });
+      Object.keys(antes).forEach(function (id) {
+        var li = tarjetas[id].li, ahora = li.getBoundingClientRect(), dx = antes[id].left - ahora.left, dy = antes[id].top - ahora.top;
+        if ((dx || dy) && li.animate) li.animate(
+          [{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
+          { duration: 600, easing: 'cubic-bezier(.2,.9,.3,1)' });
+      });
+    }
+
     $('cuantas').textContent = fotos.length ? '(' + fotos.length + ')' : '';
     vacio.hidden = fotos.length > 0;
     if (!fotos.length) vacio.textContent = 'Todavía no hay fotos. ¡Sé el primero en subir la tuya!';
+    revisarLider(maximo);
   }
 
   function cargar() {
@@ -273,6 +442,7 @@
         return f;
       });
       pintar();
+      cargado = true;
     }).catch(function (e) {
       if (fotos.length) return;
       vacio.hidden = false;
@@ -289,6 +459,7 @@
     var antes = { likes: f.likes, gusta: misLikes.has(id) };
     if (antes.gusta) { misLikes.delete(id); f.likes = Math.max(0, f.likes - 1); } else { misLikes.add(id); f.likes += 1; }
     pintar();
+    if (!antes.gusta && tarjetas[id]) corazones(tarjetas[id].like);
     rpc('fiesta_like', { p_foto: id, p_device: dispositivo }).then(function (r) {
       var fila = r && r[0];
       if (fila) { f.likes = fila.total; if (fila.me_gusta) misLikes.add(id); else misLikes.delete(id); }
@@ -352,7 +523,7 @@
       });
     }).then(function (filas) {
       var nueva = filas && filas[0];
-      if (nueva) { misFotos.add(nueva.id); guardar('santi-fotos', JSON.stringify(Array.from(misFotos))); fotos.push(nueva); pintar(); }
+      if (nueva) { misFotos.add(nueva.id); guardar('santi-fotos', JSON.stringify(Array.from(misFotos))); fotos.push(nueva); pintar(); confeti(); }
       guardar('santi-nombre', quien);
       archivo.value = ''; previa.hidden = true; $('elegir-texto').hidden = false;
       avisar('¡Listo! Tu foto ya está en la galería. Pide a todos que voten por ella.', 'ok');
