@@ -88,6 +88,15 @@ create policy "fiesta subir imagen" on storage.objects
   for insert to anon, authenticated
   with check (bucket_id = 'fiesta-fotos');
 
+-- 5) Tiempo real: avisa al sitio de cada foto y cada like al instante ----------
+do $$
+begin
+  if not exists (select 1 from pg_publication_tables
+                 where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'fiesta_fotos') then
+    alter publication supabase_realtime add table public.fiesta_fotos;
+  end if;
+end $$;
+
 -- Para ver al ganador:
 --   select nombre, likes from public.fiesta_fotos order by likes desc, creado asc limit 5;
 -- Para quitar una foto: bórrala en Table Editor > fiesta_fotos (y su archivo en Storage > fiesta-fotos).
