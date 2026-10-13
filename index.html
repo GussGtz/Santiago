@@ -141,6 +141,17 @@
   }
   .globo::before { content: ""; position: absolute; top: 98%; left: 50%; translate: -50% 0; border: .3rem solid transparent; border-bottom-color: var(--c); border-top: 0; }
   .globo::after { content: ""; position: absolute; top: calc(100% + .25rem); left: 50%; width: 1.5px; height: 4.5rem; background: rgba(251,253,249,.55); }
+  /* Balones que cruzan la pantalla botando, por encima de todo (no estorban los toques) */
+  .balones { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; }
+  .balon { position: absolute; left: 0; top: 0; width: var(--t); height: var(--t); animation: balon-cruza var(--d) linear var(--r) infinite var(--dir); }
+  .balon i {
+    display: block; width: 100%; height: 100%; filter: drop-shadow(0 .35rem .25rem rgba(0,0,0,.35));
+    background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><clipPath id='c'><circle cx='32' cy='32' r='29'/></clipPath></defs><circle cx='32' cy='32' r='29' fill='%23fbfdf9'/><g clip-path='url(%23c)' fill='%231d1d1b'><polygon points='32.0,21.0 42.5,28.6 38.5,40.9 25.5,40.9 21.5,28.6'/><polygon points='32.0,12.0 38.7,6.9 43.6,0.1 20.4,0.1 25.3,6.9'/><polygon points='51.0,25.8 58.0,30.6 66.0,33.2 58.8,11.1 53.8,17.8'/><polygon points='43.8,48.2 41.3,56.3 41.4,64.7 60.2,51.0 52.2,48.4'/><polygon points='20.2,48.2 11.8,48.4 3.8,51.0 22.6,64.7 22.7,56.3'/><polygon points='13.0,25.8 10.2,17.8 5.2,11.1 -2.0,33.2 6.0,30.6'/><path d='M32.0 21.0L32.0 12.0M42.5 28.6L51.0 25.8M38.5 40.9L43.8 48.2M25.5 40.9L20.2 48.2M21.5 28.6L13.0 25.8M32.0 12.0L45.8 13.0L51.0 25.8M51.0 25.8L54.3 39.3L43.8 48.2M43.8 48.2L32.0 55.5L20.2 48.2M20.2 48.2L9.7 39.3L13.0 25.8M13.0 25.8L18.2 13.0L32.0 12.0' fill='none' stroke='%231d1d1b' stroke-width='2' stroke-linejoin='round'/></g><circle cx='32' cy='32' r='29' fill='none' stroke='%231d1d1b' stroke-width='3'/></svg>") center / contain no-repeat;
+    animation: balon-gira var(--g) linear infinite var(--dir), balon-bota var(--b) ease-in var(--r) infinite alternate;
+  }
+  @keyframes balon-cruza { from { translate: -25vw var(--y0); } to { translate: 110vw var(--y1); } }
+  @keyframes balon-gira { to { rotate: 360deg; } }
+  @keyframes balon-bota { from { translate: 0 calc(var(--a) * -1); } to { translate: 0 0; } }
   @keyframes globo-sube { to { translate: 0 -135vh; } }
   @keyframes globo-mece { from { rotate: -7deg; margin-left: -.7rem; } to { rotate: 7deg; margin-left: .7rem; } }
 
@@ -235,13 +246,14 @@
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
-    .globos { display: none; }
+    .globos, .balones { display: none; }
     .publicada .sello path { stroke-dashoffset: 0; }
   }
 </style>
 </head>
 <body>
 <div class="globos" id="globos" aria-hidden="true"></div>
+<div class="balones" id="balones" aria-hidden="true"></div>
 <main>
   <section class="portada">
     <span class="cinta">Dinámica de la fiesta</span>
@@ -385,6 +397,21 @@
       g.style.setProperty('--d', d + 's');
       g.style.setProperty('--r', (-Math.random() * d) + 's');
       capa.appendChild(g);
+    }
+    var balones = window.innerWidth < 640 ? 4 : 7;
+    for (var k = 0; k < balones; k++) {
+      var b = document.createElement('span'), dura = 7 + Math.random() * 8, alto = 8 + (k + Math.random() * .8) * (84 / balones);
+      b.className = 'balon'; b.appendChild(document.createElement('i'));
+      b.style.setProperty('--t', (2.2 + Math.random() * 1.8) + 'rem');
+      b.style.setProperty('--d', dura + 's');
+      b.style.setProperty('--r', (-Math.random() * dura) + 's');
+      b.style.setProperty('--dir', k % 2 ? 'reverse' : 'normal');
+      b.style.setProperty('--y0', alto + 'vh');
+      b.style.setProperty('--y1', (alto + (Math.random() - .5) * 30) + 'vh');
+      b.style.setProperty('--g', (1.2 + Math.random() * 1.6) + 's');
+      b.style.setProperty('--b', (.45 + Math.random() * .35) + 's');
+      b.style.setProperty('--a', (2 + Math.random() * 5) + 'rem');
+      $('balones').appendChild(b);
     }
   })();
 
