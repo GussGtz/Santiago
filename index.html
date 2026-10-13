@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La foto con Santi</title>
+<meta name="description" content="Tómate una foto con Santi, súbela y vota. La foto con más likes gana un premio.">
+<meta name="theme-color" content="#1f4f35">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Caveat+Brush&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pasto: #2f7a4f; --pasto-claro: #4f9a6c; --pasto-hondo: #1f4f35; --sombra: #153a27;
+    --oro: #f0b43c; --naranja: #ee9a3a; --tinta: #1d1d1b; --cal: #fbfdf9; --cal-suave: #d6e8dc;
+    --f-titulo: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+    --f-nombre: "Bungee", "Arial Black", Impact, sans-serif;
+    --f-mano: "Caveat Brush", "Comic Sans MS", cursive;
+    --f-texto: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: var(--f-texto); line-height: 1.55; color: var(--cal);
+    background:
+      radial-gradient(120% 60% at 0% 0%, rgba(111,190,140,.55), transparent 60%),
+      repeating-conic-gradient(from -4deg at 50% 22rem, var(--pasto-hondo) 0deg 7deg, var(--pasto) 7deg 14deg);
+    background-color: var(--pasto-hondo);
+    padding: env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);
+  }
+  main { max-width: 68rem; margin: 0 auto; padding: 0 1rem 4rem; }
+  h1, h2, p { margin: 0; }
+  [hidden] { display: none !important; }
+
+  /* Portada */
+  .portada { text-align: center; padding: 2.5rem 0 2rem; }
+  .cinta {
+    display: inline-block; padding: .35em 1.6em .25em 1em; background: var(--oro); color: var(--tinta);
+    font-family: var(--f-titulo); font-size: clamp(1.1rem, 4.5vw, 1.5rem); letter-spacing: .06em;
+    clip-path: polygon(0 0, 100% 0, calc(100% - .6em) 50%, 100% 100%, 0 100%);
+    transform: rotate(-3deg);
+  }
+  .portada h1 { font-family: var(--f-titulo); font-weight: 400; font-size: clamp(1.8rem, 8vw, 3.2rem); line-height: 1; margin-top: 1.1rem; letter-spacing: .03em; }
+  .portada h1 b {
+    display: block; width: fit-content; margin: .12em auto 0; padding: .2em .5em .14em;
+    background: var(--tinta); color: var(--oro); font-family: var(--f-nombre); font-weight: 400;
+    font-size: clamp(2.2rem, 14vw, 6rem); letter-spacing: .05em;
+    clip-path: polygon(0 0, 100% 0, calc(100% - .32em) 50%, 100% 100%, 0 100%, .32em 50%);
+  }
+  .portada .lema { font-family: var(--f-mano); font-size: clamp(1.4rem, 6vw, 2rem); color: var(--oro); margin-top: .8rem; }
+
+  /* Pasos */
+  .pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .pasos li { background: rgba(21,58,39,.82); border: 2px solid var(--pasto-claro); border-radius: 1rem; padding: 1rem 1rem 1rem 4rem; position: relative; }
+  .pasos li::before {
+    counter-increment: paso; content: counter(paso); position: absolute; left: 1rem; top: .9rem;
+    width: 2.3rem; height: 2.3rem; border-radius: 50%; display: grid; place-items: center;
+    background: var(--oro); color: var(--tinta); font-family: var(--f-nombre); font-size: 1.15rem;
+  }
+  .pasos { counter-reset: paso; }
+  .pasos strong { display: block; font-family: var(--f-titulo); font-weight: 400; font-size: 1.45rem; letter-spacing: .04em; line-height: 1.1; }
+  .pasos span { color: var(--cal-suave); font-size: .95rem; }
+
+  /* Botones */
+  .boton {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5em; min-height: 3rem;
+    padding: .55em 1.5em; border-radius: 999px; border: 2px solid var(--cal); background: none;
+    font: 700 1.05rem var(--f-texto); color: var(--cal); cursor: pointer; transition: transform .15s, box-shadow .15s;
+  }
+  .boton-principal { background: var(--cal); color: var(--pasto); font-size: 1.2rem; box-shadow: 0 6px 0 var(--tinta); }
+  .boton:hover:not(:disabled) { transform: translateY(-2px); }
+  .boton:disabled { opacity: .6; cursor: default; }
+  :focus-visible { outline: 3px solid var(--oro); outline-offset: 3px; }
+
+  /* Subir */
+  .subir { margin-top: 2rem; background: var(--cal); color: var(--tinta); border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 8px 0 var(--sombra); }
+  .subir h2, .galeria h2 { font-family: var(--f-titulo); font-weight: 400; font-size: clamp(1.7rem, 7vw, 2.3rem); letter-spacing: .04em; line-height: 1; }
+  .subir h2 { color: var(--pasto); }
+  .subir form { display: grid; gap: .9rem; margin-top: .9rem; }
+  .elegir {
+    display: grid; place-items: center; text-align: center; gap: .3rem; min-height: 9rem; padding: 1rem;
+    border: 3px dashed var(--pasto-claro); border-radius: 1rem; cursor: pointer; color: var(--pasto); font-weight: 700; overflow: hidden;
+  }
+  .elegir img { max-width: 100%; max-height: 20rem; border-radius: .6rem; display: block; }
+  .elegir small { font-weight: 400; color: #4a5a50; }
+  .elegir:focus-within { outline: 3px solid var(--oro); outline-offset: 3px; }
+  .oculto-visual { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .subir label.campo { display: grid; gap: .3rem; font-weight: 700; }
+  .subir input[type=text] { font: inherit; font-weight: 400; padding: .7em .9em; border: 2px solid var(--pasto-claro); border-radius: .7rem; background: #fff; color: var(--tinta); min-width: 0; }
+  .subir .boton-principal { background: var(--pasto); color: var(--cal); border-color: var(--pasto); justify-self: center; }
+  .aviso { font-weight: 600; margin: 0; }
+  .aviso.error { color: #b3261e; }
+  .aviso.ok { color: var(--pasto); }
+
+  /* Galería */
+  .galeria { margin-top: 2.5rem; }
+  .galeria header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: .75rem; }
+  .orden { display: flex; border: 2px solid var(--cal); border-radius: 999px; overflow: hidden; }
+  .orden button { border: 0; background: none; color: var(--cal); font: 700 .9rem var(--f-texto); padding: .5em 1em; cursor: pointer; }
+  .orden button[aria-pressed=true] { background: var(--cal); color: var(--pasto); }
+  .vacio { margin-top: 1rem; padding: 2rem 1rem; text-align: center; background: rgba(21,58,39,.82); border-radius: 1rem; font-family: var(--f-mano); font-size: 1.5rem; color: var(--cal-suave); }
+  .fotos { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+  .foto { position: relative; background: var(--cal); color: var(--tinta); border-radius: 1rem; padding: .5rem; box-shadow: 0 6px 0 var(--sombra); display: grid; gap: .5rem; }
+  .foto .ver { padding: 0; border: 0; background: #dfe9e2; border-radius: .7rem; overflow: hidden; cursor: zoom-in; aspect-ratio: 4 / 5; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .foto .pie { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: 0 .25rem .2rem; }
+  .foto .quien { font-weight: 700; overflow-wrap: anywhere; line-height: 1.2; }
+  .foto .mia { display: block; font-weight: 400; font-size: .8rem; color: var(--pasto); }
+  .like {
+    flex: none; display: inline-flex; align-items: center; gap: .35em; min-height: 2.75rem; padding: .3em .9em;
+    border: 2px solid var(--tinta); border-radius: 999px; background: #fff; color: var(--tinta);
+    font: 700 1.05rem var(--f-texto); font-variant-numeric: tabular-nums; cursor: pointer; transition: transform .12s;
+  }
+  .like svg { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 2; }
+  .like[aria-pressed=true] { background: #e0245e; border-color: #e0245e; color: #fff; }
+  .like[aria-pressed=true] svg { fill: currentColor; }
+  .like:active { transform: scale(.92); }
+  .lider { outline: 4px solid var(--oro); }
+  .lider::before {
+    content: "🏆 Va ganando"; position: absolute; z-index: 1; top: -.7rem; left: .6rem; padding: .15em .8em .1em;
+    background: var(--oro); color: var(--tinta); font-family: var(--f-titulo); font-size: 1.15rem; letter-spacing: .05em;
+    border-radius: .4rem; transform: rotate(-3deg);
+  }
+
+  dialog { border: 0; padding: 0; background: none; max-width: 96vw; max-height: 96vh; }
+  dialog::backdrop { background: rgba(0,0,0,.85); }
+  dialog img { max-width: 96vw; max-height: 90vh; display: block; border-radius: .6rem; }
+  dialog button { position: fixed; top: .75rem; right: .75rem; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <section class="portada">
+    <span class="cinta">Dinámica de la fiesta</span>
+    <h1>La foto con <b>Santi</b></h1>
+    <p class="lema">¡La foto con más likes se lleva un premio!</p>
+  </section>
+
+  <ol class="pasos">
+    <li><strong>Tómate la foto</strong><span>Busca a Santi, el cumpleañero, y posa con él.</span></li>
+    <li><strong>Súbela aquí</strong><span>Desde tu celular, con tu nombre para saber quién gana.</span></li>
+    <li><strong>Vota</strong><span>Dale like a tus favoritas. Un like por foto en cada dispositivo.</span></li>
+  </ol>
+
+  <section class="subir" aria-labelledby="t-subir">
+    <h2 id="t-subir">Sube tu foto</h2>
+    <form id="form">
+      <label class="elegir" id="elegir">
+        <input class="oculto-visual" type="file" id="archivo" accept="image/*">
+        <span id="elegir-texto">📸 Toca para tomar o elegir la foto<br><small>Cámara o galería</small></span>
+        <img id="previa" alt="Vista previa de tu foto" hidden>
+      </label>
+      <label class="campo">¿Quién sale en la foto?
+        <input type="text" id="nombre" maxlength="60" autocomplete="name" placeholder="Tu nombre" required>
+      </label>
+      <p class="aviso" id="aviso" role="status" hidden></p>
+      <button class="boton boton-principal" id="enviar" type="submit">Subir foto</button>
+    </form>
+  </section>
+
+  <section class="galeria" aria-labelledby="t-galeria">
+    <header>
+      <h2 id="t-galeria">Las fotos <span id="cuantas"></span></h2>
+      <div class="orden" role="group" aria-label="Ordenar fotos">
+        <button type="button" data-orden="likes" aria-pressed="true">Más votadas</button>
+        <button type="button" data-orden="recientes" aria-pressed="false">Recientes</button>
+      </div>
+    </header>
+    <p class="vacio" id="vacio">Cargando fotos…</p>
+    <ul class="fotos" id="fotos"></ul>
+  </section>
+</main>
+
+<dialog id="visor">
+  <img id="visor-img" alt="">
+  <form method="dialog"><button class="boton">Cerrar</button></form>
+</dialog>
+
+<script>
+(function () {
+  // Mismo proyecto de Supabase que la invitación. Antes de usarlo, corre supabase.sql una vez.
+  var SUPABASE_URL = 'https://jnijeaelisxafedeejsq.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_-j5KEXQGEufduDoxLhbdqg_dH9_pM6Y';
+  var BUCKET = 'fiesta-fotos';
+  var LADO_MAX = 1600;          // la foto se reduce en el celular antes de subirla
+  var REFRESCO_MS = 15000;
+
+  var BASE = SUPABASE_URL.replace(/\/+$/, '');
+  var CABECERAS = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': 'Bearer ' + SUPABASE_ANON_KEY };
+
+  function $(id) { return document.getElementById(id); }
+  function leer(clave) { try { return localStorage.getItem(clave); } catch (e) { return null; } }
+  function guardar(clave, valor) { try { localStorage.setItem(clave, valor); } catch (e) {} }
+  function uuid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+
+  var dispositivo = leer('santi-dispositivo');
+  if (!dispositivo) { dispositivo = uuid(); guardar('santi-dispositivo', dispositivo); }
+  var misLikes = new Set(JSON.parse(leer('santi-likes') || '[]'));
+  var misFotos = new Set(JSON.parse(leer('santi-fotos') || '[]'));
+  function guardarLikes() { guardar('santi-likes', JSON.stringify(Array.from(misLikes))); }
+
+  function api(ruta, opciones) {
+    opciones = opciones || {};
+    opciones.headers = Object.assign({}, CABECERAS, opciones.headers || {});
+    return fetch(BASE + ruta, opciones).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) { var e = new Error(t || r.statusText); e.status = r.status; throw e; });
+      return r.status === 204 ? null : r.text().then(function (t) { return t ? JSON.parse(t) : null; });
+    });
+  }
+  function rpc(nombre, datos) {
+    return api('/rest/v1/rpc/' + nombre, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
+  }
+  function urlFoto(ruta) { return BASE + '/storage/v1/object/public/' + BUCKET + '/' + ruta; }
+
+  /* ---------- Galería ---------- */
+  var fotos = [], orden = 'likes', tarjetas = {}, enCurso = {};
+  var lista = $('fotos'), vacio = $('vacio');
+
+  function crearTarjeta(f) {
+    var li = document.createElement('li'); li.className = 'foto';
+    var ver = document.createElement('button'); ver.type = 'button'; ver.className = 'ver';
+    ver.setAttribute('aria-label', 'Ver grande la foto de ' + f.nombre);
+    var img = document.createElement('img'); img.loading = 'lazy'; img.alt = 'Foto de ' + f.nombre + ' con Santi'; img.src = urlFoto(f.ruta);
+    ver.appendChild(img);
+    ver.addEventListener('click', function () { $('visor-img').src = img.src; $('visor-img').alt = img.alt; $('visor').showModal(); });
+
+    var pie = document.createElement('div'); pie.className = 'pie';
+    var quien = document.createElement('span'); quien.className = 'quien'; quien.textContent = f.nombre;
+    if (misFotos.has(f.id)) { var mia = document.createElement('span'); mia.className = 'mia'; mia.textContent = 'Tu foto'; quien.appendChild(mia); }
+    var like = document.createElement('button'); like.type = 'button'; like.className = 'like';
+    like.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2 0 3.6 1 5.4 3 1.8-2 3.4-3 5.4-3 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg><span></span>';
+    like.addEventListener('click', function () { darLike(f.id); });
+    pie.appendChild(quien); pie.appendChild(like);
+    li.appendChild(ver); li.appendChild(pie);
+    return { li: li, like: like, cuenta: like.querySelector('span') };
+  }
+
+  function pintar() {
+    var ordenadas = fotos.slice().sort(function (a, b) {
+      if (orden === 'likes' && b.likes !== a.likes) return b.likes - a.likes;
+      return orden === 'likes' ? (a.creado < b.creado ? -1 : 1) : (a.creado > b.creado ? -1 : 1);
+    });
+    var maximo = fotos.reduce(function (m, f) { return Math.max(m, f.likes); }, 0);
+    var vivos = {};
+    ordenadas.forEach(function (f) {
+      var t = tarjetas[f.id] || (tarjetas[f.id] = crearTarjeta(f));
+      vivos[f.id] = true;
+      var gusta = misLikes.has(f.id);
+      t.cuenta.textContent = f.likes;
+      t.like.setAttribute('aria-pressed', gusta);
+      t.like.setAttribute('aria-label', (gusta ? 'Quitar mi like a' : 'Dar like a') + ' la foto de ' + f.nombre + ', ' + f.likes + ' likes');
+      t.li.classList.toggle('lider', maximo > 0 && f.likes === maximo);
+      lista.appendChild(t.li);
+    });
+    Object.keys(tarjetas).forEach(function (id) { if (!vivos[id]) { tarjetas[id].li.remove(); delete tarjetas[id]; } });
+    $('cuantas').textContent = fotos.length ? '(' + fotos.length + ')' : '';
+    vacio.hidden = fotos.length > 0;
+    if (!fotos.length) vacio.textContent = 'Todavía no hay fotos. ¡Sé el primero en subir la tuya!';
+  }
+
+  function cargar() {
+    return api('/rest/v1/fiesta_fotos?select=id,creado,nombre,ruta,likes&order=creado.asc&limit=500').then(function (filas) {
+      // no pisar el contador de una foto cuyo like va en camino
+      fotos = filas.map(function (f) {
+        if (enCurso[f.id]) { var previa = fotos.find(function (x) { return x.id === f.id; }); if (previa) f.likes = previa.likes; }
+        return f;
+      });
+      pintar();
+    }).catch(function (e) {
+      if (fotos.length) return;
+      vacio.hidden = false;
+      vacio.textContent = (e.status === 404 || e.status === 401 || e.status === 403)
+        ? 'La galería todavía no está conectada. Avísale a quien organiza la fiesta.'
+        : 'No pudimos cargar las fotos. Revisa tu conexión.';
+    });
+  }
+
+  function darLike(id) {
+    if (enCurso[id]) return;
+    var f = fotos.find(function (x) { return x.id === id; }); if (!f) return;
+    enCurso[id] = true;
+    var antes = { likes: f.likes, gusta: misLikes.has(id) };
+    if (antes.gusta) { misLikes.delete(id); f.likes = Math.max(0, f.likes - 1); } else { misLikes.add(id); f.likes += 1; }
+    pintar();
+    rpc('fiesta_like', { p_foto: id, p_device: dispositivo }).then(function (r) {
+      var fila = r && r[0];
+      if (fila) { f.likes = fila.total; if (fila.me_gusta) misLikes.add(id); else misLikes.delete(id); }
+    }).catch(function () {
+      f.likes = antes.likes; if (antes.gusta) misLikes.add(id); else misLikes.delete(id);
+    }).then(function () { delete enCurso[id]; guardarLikes(); pintar(); });
+  }
+
+  document.querySelectorAll('.orden button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      orden = b.dataset.orden;
+      document.querySelectorAll('.orden button').forEach(function (o) { o.setAttribute('aria-pressed', o === b); });
+      pintar();
+    });
+  });
+
+  /* ---------- Subir ---------- */
+  var archivo = $('archivo'), previa = $('previa'), aviso = $('aviso'), enviar = $('enviar'), nombre = $('nombre');
+  nombre.value = leer('santi-nombre') || '';
+
+  function avisar(texto, tipo) { aviso.textContent = texto; aviso.className = 'aviso ' + (tipo || ''); aviso.hidden = !texto; }
+
+  archivo.addEventListener('change', function () {
+    var f = archivo.files[0];
+    if (previa.src) URL.revokeObjectURL(previa.src);
+    previa.hidden = !f; $('elegir-texto').hidden = !!f;
+    if (f) previa.src = URL.createObjectURL(f);
+    avisar('');
+  });
+
+  // Reduce la foto y la convierte a JPG para que suba rápido con datos móviles
+  function reducir(file) {
+    return new Promise(function (ok, falla) {
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var escala = Math.min(1, LADO_MAX / Math.max(img.naturalWidth, img.naturalHeight));
+        var c = document.createElement('canvas');
+        c.width = Math.round(img.naturalWidth * escala); c.height = Math.round(img.naturalHeight * escala);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (b) { b ? ok(b) : falla(new Error('canvas')); }, 'image/jpeg', 0.82);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); falla(new Error('imagen')); };
+      img.src = url;
+    });
+  }
+
+  $('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = archivo.files[0], quien = nombre.value.trim().replace(/\s+/g, ' ');
+    if (!f) { avisar('Primero elige o toma la foto.', 'error'); return; }
+    if (quien.length < 2) { avisar('Escribe tu nombre.', 'error'); nombre.focus(); return; }
+    enviar.disabled = true; enviar.textContent = 'Subiendo…'; avisar('');
+    var ruta = uuid() + '.jpg';
+    reducir(f).then(function (blob) {
+      return api('/storage/v1/object/' + BUCKET + '/' + ruta, { method: 'POST', headers: { 'Content-Type': 'image/jpeg' }, body: blob });
+    }).then(function () {
+      return api('/rest/v1/fiesta_fotos?select=id,creado,nombre,ruta,likes', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify({ nombre: quien, ruta: ruta, device_id: dispositivo })
+      });
+    }).then(function (filas) {
+      var nueva = filas && filas[0];
+      if (nueva) { misFotos.add(nueva.id); guardar('santi-fotos', JSON.stringify(Array.from(misFotos))); fotos.push(nueva); pintar(); }
+      guardar('santi-nombre', quien);
+      archivo.value = ''; previa.hidden = true; $('elegir-texto').hidden = false;
+      avisar('¡Listo! Tu foto ya está en la galería. Pide a todos que voten por ella.', 'ok');
+      if (nueva && tarjetas[nueva.id]) tarjetas[nueva.id].li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }).catch(function (err) {
+      avisar(err.message === 'imagen' || err.message === 'canvas'
+        ? 'No pudimos leer esa imagen. Prueba con otra foto.'
+        : 'No se pudo subir la foto. Revisa tu conexión e inténtalo de nuevo.', 'error');
+    }).then(function () { enviar.disabled = false; enviar.textContent = 'Subir foto'; });
+  });
+
+  /* ---------- Arranque ---------- */
+  cargar();
+  rpc('fiesta_mis_likes', { p_device: dispositivo }).then(function (ids) {
+    if (Array.isArray(ids)) { misLikes = new Set(ids); guardarLikes(); pintar(); }
+  }).catch(function () {});
+  setInterval(function () { if (!document.hidden) cargar(); }, REFRESCO_MS);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) cargar(); });
+})();
+</script>
+</body>
+</html>
