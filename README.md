@@ -7,7 +7,7 @@ Dinámica de la fiesta: "La foto con Santi". Los invitados suben su foto con el 
 
 ## Funciones
 
-- Subir foto (máximo 2 por celular) con mensaje opcional para Santi, y likes (uno por foto por dispositivo).
+- Subir foto (máximo 2 por celular) con dedicatoria para Santi, y likes (uno por foto por dispositivo).
 - Todo en vivo con Supabase Realtime: fotos, likes, podio y cambio de líder.
 - Cuenta regresiva y cierre de votación: al cerrar se bloquean likes y subidas y aparece la foto ganadora.
 - Pantalla grande para tele o proyector: agrega `?tv=1` a la dirección.

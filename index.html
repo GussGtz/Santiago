@@ -422,8 +422,8 @@
       <label class="campo">¿Quién sale en la foto?
         <input type="text" id="nombre" maxlength="60" autocomplete="name" placeholder="Tu nombre" required>
       </label>
-      <label class="campo">Mensaje para Santi <small>(opcional)</small>
-        <textarea id="mensaje" rows="2" maxlength="140" placeholder="¡Feliz cumple, Santi!"></textarea>
+      <label class="campo">Tu dedicatoria para Santi
+        <textarea id="mensaje" rows="2" maxlength="140" placeholder="¡Feliz cumple, Santi!" required></textarea>
       </label>
       <p class="aviso" id="aviso" role="status" hidden></p>
       <button class="boton boton-principal" id="enviar" type="submit">Subir foto</button>
@@ -832,6 +832,7 @@
     if (cerrada) { avisar('La votaci\u00f3n ya cerr\u00f3.', 'error'); return; }
     if (restantes() <= 0) { avisar('Ya subiste tus ' + MAX_FOTOS + ' fotos.', 'error'); return; }
     var dedicatoria = $('mensaje').value.trim().replace(/\s+/g, ' ').slice(0, 140);
+    if (dedicatoria.length < 2) { avisar('Escribe tu dedicatoria para Santi.', 'error'); $('mensaje').focus(); return; }
     enviar.disabled = true; enviar.textContent = 'Subiendo…'; avisar('');
     $('form').classList.add('subiendo');
     var ruta = uuid() + '.jpg';
