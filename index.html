@@ -244,6 +244,118 @@
   @keyframes pub-palomita { to { stroke-dashoffset: 0; } }
   @keyframes pub-vuela { to { translate: 0 70vh; scale: .15; rotate: 12deg; opacity: 0; } }
 
+
+  /* Cuenta regresiva */
+  .reloj { width: fit-content; max-width: 100%; margin: 0 auto 1.5rem; padding: .7rem 1.4rem; text-align: center; background: var(--tinta); border: 3px solid var(--oro); border-radius: 1rem; box-shadow: 0 6px 0 rgba(0,0,0,.3); }
+  .reloj small { display: block; font-family: var(--f-titulo); font-size: 1.1rem; letter-spacing: .08em; color: var(--cal-suave); }
+  .reloj b { display: block; font-family: var(--f-nombre); font-weight: 400; font-size: clamp(1.6rem, 9vw, 2.6rem); line-height: 1.1; color: var(--oro); font-variant-numeric: tabular-nums; }
+  .reloj span { font-size: .9rem; color: var(--cal-suave); }
+  .reloj.urgente { animation: late .8s ease-in-out infinite; border-color: #e0245e; }
+  .reloj.urgente b { color: #ff7a9c; }
+
+  /* Foto ganadora */
+  .ganador { margin: 0 auto 2rem; max-width: 30rem; padding: 1.25rem 1rem 1.5rem; text-align: center; background: var(--tinta); border: 4px solid var(--oro); border-radius: 1.25rem; box-shadow: 0 8px 0 rgba(0,0,0,.35); animation: entra-pop .7s cubic-bezier(.2,1.5,.4,1) both; }
+  .ganador svg { width: 3.5rem; height: 3.5rem; fill: none; stroke: var(--oro); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; animation: trofeo .6s ease-in-out infinite alternate; }
+  .ganador h2 { font-family: var(--f-nombre); font-weight: 400; font-size: clamp(1.5rem, 7.5vw, 2.2rem); line-height: 1.1; color: var(--oro); margin: .3rem 0 1rem; }
+  .ganador .marco { display: inline-block; background: var(--cal); padding: .5rem .5rem 0; border-radius: .4rem; rotate: -2deg; box-shadow: 0 1rem 2rem rgba(0,0,0,.5); }
+  .ganador .marco img { display: block; width: min(70vw, 18rem); aspect-ratio: 4 / 5; object-fit: cover; border-radius: .2rem; background: #dfe9e2; }
+  .ganador .marco strong { display: block; padding: .5rem .25rem .6rem; color: var(--tinta); font-family: var(--f-mano); font-size: 1.7rem; line-height: 1.1; overflow-wrap: anywhere; }
+  .ganador p { margin-top: 1rem; }
+  .ganador .votos { font-family: var(--f-titulo); font-size: 1.5rem; letter-spacing: .05em; }
+  .ganador .nota { font-size: .85rem; color: var(--cal-suave); }
+  .cerrada .subir, .cerrada .compartir { display: none; }
+
+  /* Podio */
+  .podio { margin-top: 2.5rem; }
+  .podio h2 { font-family: var(--f-titulo); font-weight: 400; font-size: clamp(1.7rem, 7vw, 2.3rem); letter-spacing: .04em; line-height: 1; }
+  .podio-caja { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: .5rem; max-width: 30rem; margin: 1rem auto 0; }
+  .lugar { display: grid; justify-items: center; gap: .25rem; min-width: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: center; cursor: pointer; }
+  .lugar img { width: min(100%, 6.5rem); aspect-ratio: 1; border-radius: 50%; object-fit: cover; border: 4px solid var(--m); background: #dfe9e2; box-shadow: 0 4px 0 var(--sombra); }
+  .lugar .quien { font-weight: 700; font-size: .9rem; line-height: 1.15; overflow-wrap: anywhere; }
+  .lugar .votos { font-size: .85rem; color: var(--cal-suave); min-height: 1.2em; }
+  .lugar .base { display: grid; place-items: center; width: 100%; height: var(--h); margin-top: .2rem; background: var(--m); color: var(--tinta); font-family: var(--f-nombre); font-size: 1.9rem; border-radius: .6rem .6rem 0 0; box-shadow: inset 0 -.45rem 0 rgba(0,0,0,.16); }
+  .lugar[data-lugar="1"] { --m: var(--oro); --h: 5.5rem; }
+  .lugar[data-lugar="2"] { --m: #cfd6d2; --h: 4rem; }
+  .lugar[data-lugar="3"] { --m: #d08a4e; --h: 2.8rem; }
+  .lugar.libre { cursor: default; }
+  .lugar.libre img { visibility: hidden; }
+  .lugar.cambio img { animation: entra-pop .6s cubic-bezier(.2,1.6,.4,1); }
+
+  /* Tarjeta: dedicatoria, compartir y borrar */
+  .foto .mensaje { margin: 0; padding: 0 .25rem; font-family: var(--f-mano); font-size: 1.15rem; line-height: 1.2; color: var(--pasto); overflow-wrap: anywhere; }
+  .foto .extra { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0 .25rem .25rem; }
+  .foto .extra:empty { display: none; }
+  .compartir, .borrar { display: inline-flex; align-items: center; gap: .35em; min-height: 2.25rem; padding: .2em .8em; border-radius: 999px; border: 2px solid var(--pasto); background: none; color: var(--pasto); font: 700 .85rem var(--f-texto); text-decoration: none; cursor: pointer; }
+  .compartir svg, .borrar svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .borrar { display: none; border-color: #b3261e; color: #b3261e; }
+  .es-admin .borrar { display: inline-flex; }
+  .like:disabled { opacity: .75; cursor: default; }
+
+  /* Subir: cupo y dedicatoria */
+  .cupo { margin: .4rem 0 0; font-weight: 600; color: var(--pasto); }
+  .lleno > :not(.aviso) { display: none; }
+  .subir textarea { font: inherit; font-weight: 400; padding: .7em .9em; border: 2px solid var(--pasto-claro); border-radius: .7rem; background: #fff; color: var(--tinta); min-width: 0; resize: vertical; }
+  .subir .campo small { font-weight: 400; color: #4a5a50; }
+
+  /* Organizador */
+  .pie-pagina { position: relative; z-index: 1; text-align: center; padding: 0 1rem 2rem; }
+  .enlace { border: 0; background: none; color: var(--cal-suave); font: 600 .85rem var(--f-texto); text-decoration: underline; cursor: pointer; padding: .6rem; }
+  .admin { margin: 1rem 0 0; padding: 1rem; background: var(--cal); color: var(--tinta); border-radius: 1rem; border: 3px solid var(--oro); box-shadow: 0 6px 0 var(--sombra); display: grid; gap: .75rem; }
+  .admin h2 { font-family: var(--f-titulo); font-weight: 400; font-size: 1.6rem; letter-spacing: .04em; line-height: 1; color: var(--pasto); }
+  .admin .fila { display: flex; flex-wrap: wrap; align-items: end; gap: .5rem; }
+  .admin label { display: grid; gap: .2rem; font-weight: 700; font-size: .9rem; }
+  .admin input { font: inherit; font-weight: 400; padding: .5em .7em; border: 2px solid var(--pasto-claro); border-radius: .6rem; background: #fff; color: var(--tinta); }
+  .admin .boton { min-height: 2.6rem; padding: .4em 1em; font-size: .9rem; border-color: var(--pasto); color: var(--pasto); background: #fff; text-decoration: none; }
+  .admin .boton.fuerte { background: var(--pasto); color: var(--cal); }
+  .admin .boton.rojo { border-color: #b3261e; color: #b3261e; }
+  .admin p { margin: 0; font-weight: 600; }
+  .dlg { border: 3px solid var(--oro); border-radius: 1rem; padding: 1.25rem; background: var(--cal); color: var(--tinta); width: min(92vw, 22rem); max-width: none; max-height: none; }
+  .dlg h2 { font-family: var(--f-titulo); font-weight: 400; font-size: 1.7rem; letter-spacing: .04em; color: var(--pasto); line-height: 1; }
+  .dlg form { display: grid; gap: .8rem; margin-top: .8rem; }
+  .dlg label { display: grid; gap: .25rem; font-weight: 700; }
+  .dlg input { font: inherit; font-weight: 400; padding: .7em .9em; border: 2px solid var(--pasto-claro); border-radius: .7rem; background: #fff; color: var(--tinta); min-width: 0; }
+  .dlg .fila { display: flex; gap: .5rem; justify-content: flex-end; }
+  .dlg .boton { position: static; border-color: var(--pasto); color: var(--pasto); min-height: 2.75rem; }
+  .dlg .boton.fuerte { background: var(--pasto); color: var(--cal); }
+  .dlg p { font-size: .9rem; }
+
+  /* Pantalla grande (?tv=1) */
+  .tv main, .tv .pie-pagina { display: none; }
+  .tv-vista { position: fixed; inset: 0; z-index: 3; display: grid; grid-template-columns: minmax(0, 1fr) clamp(18rem, 30vw, 30rem); gap: 2vw; padding: 2vw; }
+  .tv-escena { position: relative; min-height: 0; display: grid; place-items: center; }
+  .tv-marco { position: relative; max-width: 100%; max-height: 100%; display: grid; grid-template-rows: minmax(0, 1fr) auto; background: var(--cal); padding: 1vw 1vw 0; border-radius: .6vw; rotate: -1.5deg; box-shadow: 0 2vw 4vw rgba(0,0,0,.5); height: 92vh; }
+  .tv-marco img { display: block; min-height: 0; height: 100%; max-width: 62vw; object-fit: contain; background: #dfe9e2; border-radius: .3vw; margin: 0 auto; }
+  .tv-marco img.entra { animation: tv-entra .7s ease-out; }
+  @keyframes tv-entra { from { opacity: 0; scale: .96; } }
+  .tv-pie { display: flex; align-items: center; justify-content: space-between; gap: 1vw; padding: .8vw .5vw 1vw; color: var(--tinta); }
+  .tv-pie strong { font-family: var(--f-mano); font-size: 3.2vw; line-height: 1; overflow-wrap: anywhere; }
+  .tv-pie span { flex: none; display: inline-flex; align-items: center; gap: .3em; font: 700 2.4vw var(--f-texto); color: #e0245e; }
+  .tv-pie svg { width: 1.1em; height: 1.1em; fill: currentColor; }
+  .tv-mensaje { position: absolute; left: 3%; right: 3%; bottom: 9vw; margin: 0; padding: .5vw 1vw; background: rgba(29,29,27,.82); color: var(--cal); font-family: var(--f-mano); font-size: 2.4vw; line-height: 1.15; border-radius: .6vw; text-align: center; }
+  .tv-sello { position: absolute; top: -1.5vw; left: -1.5vw; padding: .3em .9em .2em; background: var(--oro); color: var(--tinta); font-family: var(--f-nombre); font-size: 2.6vw; border: .3vw solid var(--tinta); border-radius: .6vw; rotate: -6deg; animation: late 1.2s ease-in-out infinite; }
+  .tv-vacio { font-family: var(--f-mano); font-size: 3vw; color: var(--cal-suave); text-align: center; }
+  .tv-lado { min-height: 0; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); gap: 1.4vw; align-content: start; }
+  .tv-lado .portada { padding: 0; }
+  .tv-lado .portada h1 { font-size: 2.4vw; margin-top: .8vw; }
+  .tv-lado .portada h1 b { font-size: 4.6vw; }
+  .tv-lado .cinta { font-size: 1.5vw; }
+  .tv-qr { display: grid; grid-template-columns: 38% 1fr; align-items: center; gap: 1vw; padding: 1vw; background: var(--cal); color: var(--tinta); border-radius: 1vw; box-shadow: 0 .5vw 0 var(--sombra); }
+  .tv-qr svg, .tv-qr img { display: block; width: 100%; height: auto; }
+  .tv-qr strong { display: block; font-family: var(--f-titulo); font-weight: 400; font-size: 2.3vw; line-height: 1; color: var(--pasto); }
+  .tv-qr span { display: block; margin-top: .4vw; font-size: 1.05vw; font-weight: 600; overflow-wrap: anywhere; }
+  .tv-reloj { margin: 0; text-align: center; font-family: var(--f-nombre); font-size: 2vw; color: var(--oro); background: var(--tinta); border-radius: 1vw; padding: .5vw; font-variant-numeric: tabular-nums; }
+  .tv-reloj:empty { display: none; }
+  .tv-lado .podio-caja { max-width: none; margin: 0; align-self: end; }
+  .tv-lado .lugar .quien { font-size: 1.2vw; } .tv-lado .lugar .votos { font-size: 1.1vw; }
+  .tv-lado .lugar img { width: min(100%, 7vw); }
+  @media (max-aspect-ratio: 1/1) {
+    .tv-vista { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
+    .tv-marco { height: 55vh; } .tv-marco img { max-width: 90vw; }
+    .tv-lado { grid-template-rows: auto; grid-template-columns: 1fr 1fr; } .tv-lado .portada, .tv-reloj { display: none; }
+    .tv-pie strong { font-size: 6vw; } .tv-pie span { font-size: 5vw; } .tv-qr strong { font-size: 4vw; } .tv-qr span { font-size: 2.2vw; }
+    .tv-lado .lugar .quien, .tv-lado .lugar .votos { font-size: 2.2vw; } .tv-lado .lugar img { width: min(100%, 12vw); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .globos, .balones { display: none; }
@@ -255,15 +367,47 @@
 <div class="globos" id="globos" aria-hidden="true"></div>
 <div class="balones" id="balones" aria-hidden="true"></div>
 <main>
+  <section class="admin" id="admin" aria-labelledby="t-admin" hidden>
+    <h2 id="t-admin">Modo organizador</h2>
+    <p id="adm-estado"></p>
+    <div class="fila">
+      <label>La votación cierra el
+        <input type="datetime-local" id="adm-cierre">
+      </label>
+      <button class="boton fuerte" id="adm-guardar" type="button">Guardar hora</button>
+      <button class="boton rojo" id="adm-cerrar-ya" type="button">Cerrar ahora</button>
+      <button class="boton" id="adm-abrir" type="button">Quitar cierre</button>
+    </div>
+    <div class="fila">
+      <button class="boton" id="adm-album" type="button">Descargar álbum</button>
+      <a class="boton" id="adm-tv" href="?tv=1" target="_blank" rel="noopener">Abrir pantalla grande</a>
+      <button class="boton" id="adm-salir" type="button">Salir</button>
+    </div>
+    <p>Para borrar una foto usa el botón rojo "Borrar" que aparece en cada una.</p>
+  </section>
   <section class="portada">
     <span class="cinta">Dinámica de la fiesta</span>
     <h1>La foto con <b>Santi</b></h1>
     <p class="lema">¡La foto con más likes se lleva un premio!</p>
   </section>
 
+  <section class="reloj" id="reloj" aria-live="off" hidden>
+    <small>La votación cierra en</small>
+    <b id="reloj-tiempo"></b>
+    <span id="reloj-hora"></span>
+  </section>
+
+  <section class="ganador" id="ganador" aria-live="polite" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0"/></svg>
+    <h2 id="ganador-titulo">¡Tenemos foto ganadora!</h2>
+    <div class="marco" id="ganador-marco"><img id="ganador-img" alt=""><strong id="ganador-nombre"></strong></div>
+    <p class="votos" id="ganador-votos"></p>
+    <p class="nota" id="ganador-nota"></p>
+  </section>
+
   <ol class="pasos">
     <li><strong>Tómate la foto</strong><span>Busca a Santi, el cumpleañero, y posa con él.</span></li>
-    <li><strong>Súbela aquí</strong><span>Desde tu celular, con tu nombre para saber quién gana.</span></li>
+    <li><strong>Súbela aquí</strong><span>Desde tu celular, con tu nombre. Máximo 2 fotos por celular.</span></li>
     <li><strong>Vota</strong><span>Dale like a tus favoritas. Un like por foto en cada dispositivo.</span></li>
   </ol>
 
@@ -278,9 +422,18 @@
       <label class="campo">¿Quién sale en la foto?
         <input type="text" id="nombre" maxlength="60" autocomplete="name" placeholder="Tu nombre" required>
       </label>
+      <label class="campo">Mensaje para Santi <small>(opcional)</small>
+        <textarea id="mensaje" rows="2" maxlength="140" placeholder="¡Feliz cumple, Santi!"></textarea>
+      </label>
       <p class="aviso" id="aviso" role="status" hidden></p>
       <button class="boton boton-principal" id="enviar" type="submit">Subir foto</button>
     </form>
+    <p class="cupo" id="cupo"></p>
+  </section>
+
+  <section class="podio" id="podio" aria-labelledby="t-podio" hidden>
+    <h2 id="t-podio">El podio</h2>
+    <div class="podio-caja" id="podio-caja"></div>
   </section>
 
   <section class="galeria" aria-labelledby="t-galeria">
@@ -295,6 +448,44 @@
     <ul class="fotos" id="fotos"></ul>
   </section>
 </main>
+
+<footer class="pie-pagina"><button class="enlace" id="abrir-admin" type="button">Organizador</button></footer>
+
+<div class="tv-vista" id="tv" hidden>
+  <div class="tv-escena">
+    <p class="tv-vacio" id="tv-vacio">Todavía no hay fotos. ¡Escanea el código y sube la primera!</p>
+    <div class="tv-marco" id="tv-marco" hidden>
+      <img id="tv-img" alt="">
+      <p class="tv-mensaje" id="tv-mensaje" hidden></p>
+      <div class="tv-pie"><strong id="tv-nombre"></strong><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg><b id="tv-likes"></b></span></div>
+      <div class="tv-sello" id="tv-sello" hidden>¡Foto ganadora!</div>
+    </div>
+  </div>
+  <aside class="tv-lado">
+    <div class="portada"><span class="cinta">Dinámica de la fiesta</span><h1>La foto con <b>Santi</b></h1></div>
+    <div class="tv-qr"><div id="tv-qr"></div><p><strong>Escanea y sube tu foto con Santi</strong><span id="tv-url"></span></p></div>
+    <p class="tv-reloj" id="tv-reloj"></p>
+    <div class="podio-caja" id="tv-podio"></div>
+  </aside>
+</div>
+
+<dialog class="dlg" id="dlg-admin">
+  <h2 id="dlg-titulo">Modo organizador</h2>
+  <form id="dlg-form">
+    <p id="dlg-texto"></p>
+    <label>Contraseña
+      <input type="password" id="adm-clave" autocomplete="current-password" required minlength="6" maxlength="72">
+    </label>
+    <label id="dlg-repite">Repite la contraseña
+      <input type="password" id="adm-clave2" autocomplete="new-password" maxlength="72">
+    </label>
+    <p class="aviso error" id="dlg-error" role="alert" hidden></p>
+    <div class="fila">
+      <button class="boton" type="button" id="dlg-cancelar">Cancelar</button>
+      <button class="boton fuerte" type="submit" id="dlg-entrar">Entrar</button>
+    </div>
+  </form>
+</dialog>
 
 <div class="festejo" id="festejo" role="status" aria-live="polite">
   <svg class="ico-camara" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>
@@ -378,6 +569,15 @@
     like.addEventListener('click', function () { darLike(f.id); });
     pie.appendChild(quien); pie.appendChild(like);
     li.appendChild(ver); li.appendChild(pie);
+    if (f.mensaje) { var dedicatoria = document.createElement('p'); dedicatoria.className = 'mensaje'; dedicatoria.textContent = '\u201c' + f.mensaje + '\u201d'; li.appendChild(dedicatoria); }
+    var extra = document.createElement('div'); extra.className = 'extra';
+    var compartir = document.createElement('a'); compartir.className = 'compartir'; compartir.target = '_blank'; compartir.rel = 'noopener';
+    compartir.href = 'https://wa.me/?text=' + encodeURIComponent('\u00a1Vota por la foto de ' + f.nombre + ' con Santi! ' + enlaceFoto(f.id));
+    compartir.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/></svg>Pide votos';
+    var borrar = document.createElement('button'); borrar.type = 'button'; borrar.className = 'borrar';
+    borrar.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/></svg>Borrar';
+    borrar.addEventListener('click', function () { borrarFoto(f); });
+    extra.appendChild(compartir); extra.appendChild(borrar); li.appendChild(extra);
     return { li: li, like: like, cuenta: like.querySelector('span') };
   }
 
@@ -508,6 +708,7 @@
         if (f.likes > +previo && !enCurso[f.id] && cargado && aLaVista(t.like)) corazones(t.like);
       }
       t.like.setAttribute('aria-pressed', gusta);
+      t.like.disabled = cerrada;
       t.like.setAttribute('aria-label', (gusta ? 'Quitar mi like a' : 'Dar like a') + ' la foto de ' + f.nombre + ', ' + f.likes + ' likes');
       t.li.classList.toggle('lider', maximo > 0 && f.likes === maximo);
     });
@@ -530,18 +731,19 @@
     $('cuantas').textContent = fotos.length ? '(' + fotos.length + ')' : '';
     vacio.hidden = fotos.length > 0;
     if (!fotos.length) vacio.textContent = 'Todavía no hay fotos. ¡Sé el primero en subir la tuya!';
-    revisarLider(maximo);
+    if (!cerrada) revisarLider(maximo);
+    extras();
   }
 
   function cargar() {
-    return api('/rest/v1/fiesta_fotos?select=id,creado,nombre,ruta,likes&order=creado.asc&limit=500').then(function (filas) {
+    return api('/rest/v1/fiesta_fotos?select=id,creado,nombre,ruta,likes,mensaje&order=creado.asc&limit=500').then(function (filas) {
       // no pisar el contador de una foto cuyo like va en camino
       fotos = filas.map(function (f) {
         if (enCurso[f.id]) { var previa = fotos.find(function (x) { return x.id === f.id; }); if (previa) f.likes = previa.likes; }
         return f;
       });
       pintar();
-      cargado = true;
+      if (!cargado) { cargado = true; alPrimerCargado(); }
     }).catch(function (e) {
       if (fotos.length) return;
       vacio.hidden = false;
@@ -552,7 +754,7 @@
   }
 
   function darLike(id) {
-    if (enCurso[id]) return;
+    if (cerrada || enCurso[id]) return;
     var f = fotos.find(function (x) { return x.id === id; }); if (!f) return;
     enCurso[id] = true;
     var antes = { likes: f.likes, gusta: misLikes.has(id) };
@@ -630,6 +832,9 @@
     var f = archivo.files[0], quien = nombre.value.trim().replace(/\s+/g, ' ');
     if (!f) { avisar('Primero elige o toma la foto.', 'error'); return; }
     if (quien.length < 2) { avisar('Escribe tu nombre.', 'error'); nombre.focus(); return; }
+    if (cerrada) { avisar('La votaci\u00f3n ya cerr\u00f3.', 'error'); return; }
+    if (restantes() <= 0) { avisar('Ya subiste tus ' + MAX_FOTOS + ' fotos.', 'error'); return; }
+    var dedicatoria = $('mensaje').value.trim().replace(/\s+/g, ' ').slice(0, 140);
     enviar.disabled = true; enviar.textContent = 'Subiendo…'; avisar('');
     $('form').classList.add('subiendo');
     var ruta = uuid() + '.jpg';
@@ -637,23 +842,336 @@
     reducir(f).then(function (blob) {
       return api('/storage/v1/object/' + BUCKET + '/' + ruta, { method: 'POST', headers: { 'Content-Type': 'image/jpeg' }, body: blob });
     }).then(function () {
-      return api('/rest/v1/fiesta_fotos?select=id,creado,nombre,ruta,likes', {
+      return api('/rest/v1/fiesta_fotos?select=id,creado,nombre,ruta,likes,mensaje', {
         method: 'POST', headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-        body: JSON.stringify({ nombre: quien, ruta: ruta, device_id: dispositivo })
+        body: JSON.stringify({ nombre: quien, ruta: ruta, device_id: dispositivo, mensaje: dedicatoria || null })
       });
     }).then(function (filas) {
       var nueva = filas && filas[0];
       if (nueva) { misFotos.add(nueva.id); guardar('santi-fotos', JSON.stringify(Array.from(misFotos))); if (!fotos.some(function (x) { return x.id === nueva.id; })) fotos.push(nueva); pintar(); }
       guardar('santi-nombre', quien);
-      archivo.value = ''; previa.hidden = true; $('elegir-texto').hidden = false;
+      archivo.value = ''; previa.hidden = true; $('elegir-texto').hidden = false; $('mensaje').value = '';
       avisar('¡Listo! Tu foto ya está en la galería. Pide a todos que voten por ella.', 'ok');
       if (nueva) celebrarPublicada(nueva);
     }).catch(function (err) {
       avisar(err.message === 'imagen' || err.message === 'canvas'
         ? 'No pudimos leer esa imagen. Prueba con otra foto.'
+        : /limite de fotos/.test(err.message) ? 'Ya subiste tus ' + MAX_FOTOS + ' fotos desde este celular.'
+        : /votacion cerrada/.test(err.message) ? 'La votación ya cerró.'
         : 'No se pudo subir la foto. Revisa tu conexión e inténtalo de nuevo.', 'error');
+      if (/limite de fotos/.test(err.message)) cargarMisFotos();
     }).then(function () { enviar.disabled = false; enviar.textContent = 'Subir foto'; $('form').classList.remove('subiendo'); });
   });
+
+  /* ---------- Votación: cierre, ganadora, podio y cupo de fotos ---------- */
+  var MAX_FOTOS = 2, TV = /[?&]tv=1(&|$)/.test(location.search);
+  var cierre = null, cerrada = false, configLista = false, clave = null;
+
+  function dos(n) { return (n < 10 ? '0' : '') + n; }
+  function plural(n, uno, varios) { return n + ' ' + (n === 1 ? uno : varios); }
+  function suave() { return sinMovimiento ? 'auto' : 'smooth'; }
+  // Orden oficial: más likes primero; en empate gana la que se subió antes
+  function ranking() { return fotos.slice().sort(function (a, b) { return b.likes - a.likes || (a.creado < b.creado ? -1 : 1); }); }
+  function enlaceFoto(id) { return location.origin + location.pathname + '?foto=' + id; }
+  function restantes() { return MAX_FOTOS - fotos.filter(function (f) { return misFotos.has(f.id); }).length; }
+
+  function cuando(ms) {
+    var d = new Date(ms), hora = d.toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit' }).replace(/\s*a\.\s?m\.?/i, ' AM').replace(/\s*p\.\s?m\.?/i, ' PM');
+    if (d.toDateString() === new Date().toDateString()) return 'hoy a las ' + hora;
+    return 'el ' + d.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) + ' a las ' + hora;
+  }
+
+  function cargarConfig() {
+    return api('/rest/v1/fiesta_config?select=cierre&id=eq.1').then(function (filas) {
+      ponerCierre(filas && filas[0] ? filas[0].cierre : null);
+    }).catch(function () {});
+  }
+  function cargarMisFotos() {
+    return rpc('fiesta_mis_fotos', { p_device: dispositivo }).then(function (ids) {
+      if (!Array.isArray(ids)) return;
+      misFotos = new Set(ids); guardar('santi-fotos', JSON.stringify(ids)); pintarCupo();
+    }).catch(function () {});
+  }
+
+  function ponerCierre(valor) {
+    var nuevo = valor ? Date.parse(valor) : null;
+    cierre = nuevo === null || isNaN(nuevo) ? null : nuevo;
+    revisarCierre();
+    configLista = true;
+    if (clave) pintarAdmin();
+  }
+  // Corre cada segundo: mueve la cuenta regresiva y detecta el momento exacto del cierre
+  function revisarCierre() {
+    var ahora = Date.now(), estaba = cerrada, texto = '';
+    cerrada = cierre !== null && ahora >= cierre;
+    if (cierre !== null && !cerrada) {
+      var s = Math.floor((cierre - ahora) / 1000), d = Math.floor(s / 86400);
+      texto = (d ? plural(d, 'día', 'días') + ' ' : '') + dos(Math.floor(s % 86400 / 3600)) + ':' + dos(Math.floor(s % 3600 / 60)) + ':' + dos(s % 60);
+      $('reloj-tiempo').textContent = texto;
+      $('reloj-hora').textContent = 'Cierra ' + cuando(cierre);
+      $('reloj').classList.toggle('urgente', s < 300);
+    }
+    $('reloj').hidden = !texto;
+    $('tv-reloj').textContent = texto ? 'Cierra en ' + texto : '';
+    if (estaba === cerrada) return;
+    document.body.classList.toggle('cerrada', cerrada);
+    pintar();
+    if (clave) pintarAdmin();
+    if (cerrada) {
+      confeti();
+      if (configLista && !TV) $('ganador').scrollIntoView({ behavior: suave(), block: 'center' });
+    }
+  }
+  setInterval(revisarCierre, 1000);
+
+  function pintarCupo() {
+    var r = restantes();
+    $('form').classList.toggle('lleno', r <= 0);
+    $('cupo').textContent = r <= 0 ? 'Ya subiste tus ' + MAX_FOTOS + ' fotos. ¡Ahora a pedir votos!'
+      : r === 1 ? 'Te queda 1 foto por subir.' : 'Puedes subir hasta ' + MAX_FOTOS + ' fotos.';
+  }
+
+  function crearPodio(caja) {
+    [2, 1, 3].forEach(function (n) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'lugar libre'; b.dataset.lugar = n; b.dataset.foto = '';
+      b.innerHTML = '<img alt=""><span class="quien"></span><span class="votos"></span><span class="base">' + n + '</span>';
+      b.addEventListener('click', function () {
+        var t = tarjetas[b.dataset.foto];
+        if (t && !TV) { t.li.scrollIntoView({ behavior: suave(), block: 'center' }); t.li.classList.add('nueva'); }
+      });
+      caja.appendChild(b);
+    });
+  }
+  function pintarPodio(caja, top) {
+    if (!caja.children.length) crearPodio(caja);
+    Array.prototype.forEach.call(caja.children, function (b) {
+      var f = top[b.dataset.lugar - 1], img = b.querySelector('img'), id = f ? f.id : '';
+      b.classList.toggle('libre', !f);
+      b.querySelector('.quien').textContent = f ? f.nombre : '';
+      b.querySelector('.votos').textContent = f ? plural(f.likes, 'like', 'likes') : '';
+      b.setAttribute('aria-label', 'Lugar ' + b.dataset.lugar + (f ? ': ' + f.nombre + ', ' + plural(f.likes, 'like', 'likes') : ': libre'));
+      if (b.dataset.foto === id) return;
+      b.dataset.foto = id;
+      if (!f) { img.removeAttribute('src'); return; }
+      img.src = urlFoto(f.ruta);
+      if (cargado) { b.classList.remove('cambio'); void b.offsetWidth; b.classList.add('cambio'); }
+    });
+  }
+
+  function pintarGanador(top) {
+    var g = top[0];
+    $('ganador').hidden = !cerrada;
+    if (!cerrada) return;
+    $('ganador-marco').hidden = !g;
+    $('ganador-titulo').textContent = g ? '¡Tenemos foto ganadora!' : 'La votación terminó';
+    $('ganador-votos').textContent = g ? plural(g.likes, 'like', 'likes') : 'No se subieron fotos.';
+    $('ganador-nota').textContent = g && top[1] && top[1].likes === g.likes ? 'Hubo empate en likes: gana la foto que se subió primero.' : '';
+    if (!g) return;
+    var img = $('ganador-img'), u = urlFoto(g.ruta);
+    if (img.getAttribute('src') !== u) img.src = u;
+    img.alt = 'Foto ganadora: ' + g.nombre + ' con Santi';
+    $('ganador-nombre').textContent = g.nombre;
+  }
+
+  // Se llama al final de cada pintar()
+  function extras() {
+    var top = ranking();
+    pintarCupo();
+    $('podio').hidden = !fotos.length;
+    pintarPodio($('podio-caja'), top);
+    pintarGanador(top);
+    if (TV) pintarTV(top);
+  }
+
+  // Enlace compartido (?foto=...): lleva directo a esa foto
+  function alPrimerCargado() {
+    var m = /[?&]foto=([0-9a-f-]{36})/.exec(location.search), t = m && tarjetas[m[1]];
+    if (t) setTimeout(function () { t.li.scrollIntoView({ behavior: suave(), block: 'center' }); t.li.classList.add('nueva'); }, 700);
+  }
+
+  /* ---------- Modo organizador (la contraseña se valida en Supabase, aquí no se guarda ninguna) ---------- */
+  var creando = false;
+  function sesion(valor) {
+    try {
+      if (valor === undefined) return sessionStorage.getItem('santi-organizador');
+      if (valor === null) sessionStorage.removeItem('santi-organizador'); else sessionStorage.setItem('santi-organizador', valor);
+    } catch (e) {}
+    return null;
+  }
+  function entrarAdmin(c) { clave = c; sesion(c); document.body.classList.add('es-admin'); $('admin').hidden = false; pintarAdmin(); }
+  function salirAdmin() { clave = null; sesion(null); document.body.classList.remove('es-admin'); $('admin').hidden = true; }
+  function horaLocal(ms) { var d = new Date(ms); return d.getFullYear() + '-' + dos(d.getMonth() + 1) + '-' + dos(d.getDate()) + 'T' + dos(d.getHours()) + ':' + dos(d.getMinutes()); }
+  function pintarAdmin() {
+    $('adm-estado').textContent = cierre === null ? 'La votación está abierta y sin hora de cierre.'
+      : cerrada ? 'La votación está cerrada (cerró ' + cuando(cierre) + ').'
+      : 'La votación está abierta y cierra ' + cuando(cierre) + '.';
+    if (document.activeElement !== $('adm-cierre')) $('adm-cierre').value = cierre === null ? '' : horaLocal(cierre);
+  }
+  function errorAdmin(e) {
+    if (/clave incorrecta/.test(e && e.message)) { salirAdmin(); alert('La contraseña ya no es válida. Vuelve a entrar al modo organizador.'); }
+    else alert('No se pudo completar. Revisa tu conexión e inténtalo de nuevo.');
+  }
+  function fijarCierre(iso) {
+    return rpc('fiesta_admin_cierre', { p_clave: clave, p_cierre: iso }).then(function () { ponerCierre(iso); }).catch(errorAdmin);
+  }
+  function borrarFoto(f) {
+    if (!clave || !confirm('¿Borrar la foto de ' + f.nombre + '? No se puede deshacer.')) return;
+    rpc('fiesta_admin_borrar', { p_clave: clave, p_foto: f.id }).then(function () {
+      fotos = fotos.filter(function (x) { return x.id !== f.id; }); pintar();
+    }).catch(errorAdmin);
+  }
+
+  $('abrir-admin').addEventListener('click', function () {
+    if (clave) { $('admin').scrollIntoView({ behavior: suave(), block: 'start' }); return; }
+    rpc('fiesta_admin_existe', {}).then(function (existe) {
+      creando = !existe;
+      $('dlg-titulo').textContent = creando ? 'Crea la contraseña' : 'Modo organizador';
+      $('dlg-texto').textContent = creando
+        ? 'Es la primera vez que se abre: elige la contraseña del organizador (mínimo 6 caracteres) y guárdala bien.'
+        : 'Escribe la contraseña del organizador.';
+      $('dlg-repite').hidden = !creando;
+      $('dlg-entrar').textContent = creando ? 'Crear' : 'Entrar';
+      $('adm-clave').value = ''; $('adm-clave2').value = '';
+      $('adm-clave').autocomplete = creando ? 'new-password' : 'current-password';
+      $('dlg-error').hidden = true;
+      $('dlg-admin').showModal();
+    }).catch(function () { alert('No se pudo conectar. Inténtalo de nuevo.'); });
+  });
+  $('dlg-cancelar').addEventListener('click', function () { $('dlg-admin').close(); });
+  $('dlg-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var c = $('adm-clave').value, error = $('dlg-error'), boton = $('dlg-entrar');
+    function falla(texto) { error.textContent = texto; error.hidden = false; boton.disabled = false; }
+    if (c.length < 6) { falla('Mínimo 6 caracteres.'); return; }
+    if (creando && c !== $('adm-clave2').value) { falla('Las contraseñas no coinciden.'); return; }
+    boton.disabled = true; error.hidden = true;
+    rpc(creando ? 'fiesta_admin_crear' : 'fiesta_admin_valida', { p_clave: c }).then(function (ok) {
+      if (ok !== true) { falla('Contraseña incorrecta.'); return; }
+      boton.disabled = false;
+      $('dlg-admin').close(); entrarAdmin(c);
+      $('admin').scrollIntoView({ behavior: suave(), block: 'start' });
+    }).catch(function (e2) {
+      falla(/ya existe/.test(e2.message) ? 'Ya hay una contraseña creada. Cierra y vuelve a entrar.' : 'No se pudo conectar. Inténtalo de nuevo.');
+    });
+  });
+  $('adm-salir').addEventListener('click', salirAdmin);
+  $('adm-guardar').addEventListener('click', function () {
+    var d = new Date($('adm-cierre').value);
+    if (isNaN(d.getTime())) { alert('Elige la fecha y la hora de cierre.'); return; }
+    fijarCierre(d.toISOString());
+  });
+  $('adm-cerrar-ya').addEventListener('click', function () {
+    if (confirm('¿Cerrar la votación ahora? Se bloquean los likes y aparece la foto ganadora.')) fijarCierre(new Date().toISOString());
+  });
+  $('adm-abrir').addEventListener('click', function () {
+    if (confirm('¿Quitar la hora de cierre? La votación queda abierta hasta que pongas otra.')) fijarCierre(null);
+  });
+  (function () {
+    var guardada = sesion();
+    if (guardada) rpc('fiesta_admin_valida', { p_clave: guardada }).then(function (ok) { if (ok === true) entrarAdmin(guardada); else sesion(null); }).catch(function () {});
+  })();
+
+  /* ---------- Descargar álbum: un .zip armado en el navegador ---------- */
+  var TABLA_CRC = null;
+  function crc32(u8) {
+    var c, n, k, crc = 0xFFFFFFFF;
+    if (!TABLA_CRC) {
+      TABLA_CRC = [];
+      for (n = 0; n < 256; n++) { c = n; for (k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; TABLA_CRC[n] = c >>> 0; }
+    }
+    for (n = 0; n < u8.length; n++) crc = TABLA_CRC[(crc ^ u8[n]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function zip(archivos) {   // sin compresión: los JPG ya vienen comprimidos
+    var codifica = new TextEncoder(), partes = [], central = [], pos = 0, tamCentral = 0, hoy = new Date();
+    var fecha = ((hoy.getFullYear() - 1980) << 9) | ((hoy.getMonth() + 1) << 5) | hoy.getDate(), hora = (hoy.getHours() << 11) | (hoy.getMinutes() << 5);
+    archivos.forEach(function (a) {
+      var nombre = codifica.encode(a.nombre), crc = crc32(a.datos), n = a.datos.length;
+      var cab = new DataView(new ArrayBuffer(30)), cen = new DataView(new ArrayBuffer(46));
+      cab.setUint32(0, 0x04034b50, true); cab.setUint16(4, 20, true); cab.setUint16(6, 0x0800, true);
+      cab.setUint16(10, hora, true); cab.setUint16(12, fecha, true); cab.setUint32(14, crc, true);
+      cab.setUint32(18, n, true); cab.setUint32(22, n, true); cab.setUint16(26, nombre.length, true);
+      cen.setUint32(0, 0x02014b50, true); cen.setUint16(4, 20, true); cen.setUint16(6, 20, true); cen.setUint16(8, 0x0800, true);
+      cen.setUint16(12, hora, true); cen.setUint16(14, fecha, true); cen.setUint32(16, crc, true);
+      cen.setUint32(20, n, true); cen.setUint32(24, n, true); cen.setUint16(28, nombre.length, true); cen.setUint32(42, pos, true);
+      partes.push(cab.buffer, nombre, a.datos); central.push(cen.buffer, nombre);
+      pos += 30 + nombre.length + n; tamCentral += 46 + nombre.length;
+    });
+    var fin = new DataView(new ArrayBuffer(22));
+    fin.setUint32(0, 0x06054b50, true); fin.setUint16(8, archivos.length, true); fin.setUint16(10, archivos.length, true);
+    fin.setUint32(12, tamCentral, true); fin.setUint32(16, pos, true);
+    return new Blob(partes.concat(central, [fin.buffer]), { type: 'application/zip' });
+  }
+  $('adm-album').addEventListener('click', function () {
+    var boton = $('adm-album'), enOrden = ranking(), archivos = [], notas = ['Fotos con Santi', ''], cadena = Promise.resolve();
+    if (!enOrden.length) { alert('Todavía no hay fotos.'); return; }
+    boton.disabled = true;
+    enOrden.forEach(function (f, i) {
+      cadena = cadena.then(function () {
+        boton.textContent = 'Preparando ' + (i + 1) + ' de ' + enOrden.length + '…';
+        return fetch(urlFoto(f.ruta));
+      }).then(function (r) {
+        if (!r.ok) throw new Error('foto');
+        return r.arrayBuffer();
+      }).then(function (buf) {
+        var limpio = f.nombre.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'foto';
+        var nombre = dos(i + 1) + '_' + limpio + '_' + f.likes + '-likes.jpg';
+        archivos.push({ nombre: nombre, datos: new Uint8Array(buf) });
+        notas.push((i + 1) + '. ' + f.nombre + ' - ' + plural(f.likes, 'like', 'likes') + (f.mensaje ? ' - "' + f.mensaje + '"' : '') + '  [' + nombre + ']');
+      });
+    });
+    cadena.then(function () {
+      archivos.push({ nombre: 'dedicatorias.txt', datos: new TextEncoder().encode(notas.join('\r\n')) });
+      var a = document.createElement('a'), url = URL.createObjectURL(zip(archivos));
+      a.href = url; a.download = 'fotos-con-santi.zip';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
+    }).catch(function () { alert('No se pudo armar el álbum. Revisa tu conexión e inténtalo de nuevo.'); })
+      .then(function () { boton.disabled = false; boton.textContent = 'Descargar álbum'; });
+  });
+
+  /* ---------- Pantalla grande (?tv=1): las fotos pasan solas, con podio, QR y avisos en vivo ---------- */
+  var tvActual = null, tvVistas = null, tvReloj = null;
+  function pintarPieTV(f) {
+    $('tv-nombre').textContent = f.nombre; $('tv-likes').textContent = f.likes;
+    $('tv-mensaje').textContent = f.mensaje ? '“' + f.mensaje + '”' : ''; $('tv-mensaje').hidden = !f.mensaje;
+  }
+  function mostrarTV(f) {
+    var img = $('tv-img'), u = urlFoto(f.ruta);
+    tvActual = f.id;
+    if (img.getAttribute('src') !== u) { img.src = u; img.alt = 'Foto de ' + f.nombre + ' con Santi'; img.classList.remove('entra'); void img.offsetWidth; img.classList.add('entra'); }
+    pintarPieTV(f);
+  }
+  function siguienteTV() {
+    if (cerrada || !fotos.length) return;
+    var porFecha = fotos.slice().sort(function (a, b) { return a.creado < b.creado ? -1 : 1; }), i = -1;
+    porFecha.forEach(function (f, k) { if (f.id === tvActual) i = k; });
+    mostrarTV(porFecha[(i + 1) % porFecha.length]);
+  }
+  function reiniciarRelojTV() { clearInterval(tvReloj); tvReloj = setInterval(siguienteTV, 7000); }
+  function pintarTV(top) {
+    pintarPodio($('tv-podio'), top);
+    $('tv-vacio').hidden = fotos.length > 0; $('tv-marco').hidden = !fotos.length; $('tv-sello').hidden = !(cerrada && fotos.length);
+    var nuevas = tvVistas && cargado ? fotos.filter(function (f) { return !tvVistas.has(f.id); }) : [];
+    tvVistas = new Set(fotos.map(function (f) { return f.id; }));
+    if (!fotos.length) { tvActual = null; return; }
+    if (cerrada) { mostrarTV(top[0]); return; }
+    var actual = fotos.find(function (f) { return f.id === tvActual; });
+    if (nuevas.length) { mostrarTV(nuevas[nuevas.length - 1]); reiniciarRelojTV(); }   // la foto recién subida sale de inmediato
+    else if (actual) pintarPieTV(actual);
+    else siguienteTV();
+  }
+  if (TV) {
+    document.body.classList.add('tv'); $('tv').hidden = false;
+    var sitio = location.origin + location.pathname, qr = document.createElement('script');
+    $('tv-url').textContent = sitio.replace(/^https?:\/\//, '').replace(/\/(index\.html)?$/, '');
+    qr.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
+    qr.onload = function () {
+      try { var q = window.qrcode(0, 'M'); q.addData(sitio); q.make(); $('tv-qr').innerHTML = q.createSvgTag(4, 0); } catch (e) {}
+    };
+    document.head.appendChild(qr);
+    reiniciarRelojTV();
+  }
 
   /* ---------- En vivo: Supabase Realtime avisa de cada foto y cada like al instante ---------- */
   var rutaSubiendo = null, enVivo = false, ws = null, latido = null, reintento = 1000, ref = 0;
@@ -663,6 +1181,7 @@
 
   function alCambio(d) {
     if (!d) return;
+    if (d.table === 'fiesta_config') { if (d.record) ponerCierre(d.record.cierre); else cargarConfig(); return; }
     if (d.type === 'DELETE') {
       var borrada = d.old_record && d.old_record.id;
       if (!borrada) { cargar(); return; }
@@ -672,7 +1191,7 @@
     if (!r || !r.id || !r.nombre || !r.ruta || r.likes == null) { cargar(); return; }
     var f = fotos.find(function (x) { return x.id === r.id; });
     if (!f) {
-      fotos.push({ id: r.id, creado: r.creado, nombre: r.nombre, ruta: r.ruta, likes: r.likes });
+      fotos.push({ id: r.id, creado: r.creado, nombre: r.nombre, ruta: r.ruta, likes: r.likes, mensaje: r.mensaje || null });
       pintar();
       if (r.ruta !== rutaSubiendo && !misFotos.has(r.id)) anunciar('¡Nueva foto!', r.nombre + ' ya está en la galería', true);
     } else if (!enCurso[r.id] && f.likes !== r.likes) {
@@ -691,7 +1210,7 @@
     s.onopen = function () {
       manda(CANAL, 'phx_join', { config: {
         broadcast: { self: false }, presence: { key: '' },
-        postgres_changes: [{ event: '*', schema: 'public', table: 'fiesta_fotos' }]
+        postgres_changes: [{ event: '*', schema: 'public', table: 'fiesta_fotos' }, { event: '*', schema: 'public', table: 'fiesta_config' }]
       } });
       latido = setInterval(function () { manda('phoenix', 'heartbeat', {}); }, 25000);
     };
@@ -700,7 +1219,7 @@
       if (m.topic !== CANAL) return;
       var p = m.payload || {};
       if (m.event === 'postgres_changes') alCambio(p.data);
-      else if (m.event === 'system' && p.extension === 'postgres_changes') { marcarVivo(p.status === 'ok'); if (enVivo) { reintento = 1000; cargar(); } }
+      else if (m.event === 'system' && p.extension === 'postgres_changes') { marcarVivo(p.status === 'ok'); if (enVivo) { reintento = 1000; cargar(); cargarConfig(); } }
       else if (m.event === 'phx_error' || m.event === 'phx_close') s.close();
     };
     s.onclose = function () {
@@ -790,17 +1309,19 @@
   })();
 
   /* ---------- Arranque ---------- */
+  cargarConfig();
   cargar();
+  cargarMisFotos();
   rpc('fiesta_mis_likes', { p_device: dispositivo }).then(function (ids) {
     if (Array.isArray(ids)) { misLikes = new Set(ids); guardarLikes(); pintar(); }
   }).catch(function () {});
   conectar();
   // Respaldo: si no hay conexión en vivo se consulta cada 15 s; con ella, solo cada minuto
   var vuelta = 0;
-  setInterval(function () { vuelta++; if (!document.hidden && (!enVivo || vuelta % 4 === 0)) cargar(); }, REFRESCO_MS);
+  setInterval(function () { vuelta++; if (!document.hidden && (!enVivo || vuelta % 4 === 0)) { cargar(); cargarConfig(); } }, REFRESCO_MS);
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) return;
-    cargar();
+    cargar(); cargarConfig();
     if (!ws || ws.readyState > 1) { reintento = 1000; conectar(); }
   });
 })();
