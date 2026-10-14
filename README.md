@@ -13,3 +13,4 @@ Dinámica de la fiesta: "La foto con Santi". Los invitados suben su foto con el 
 - Pantalla grande para tele o proyector: agrega `?tv=1` a la dirección.
 - Modo organizador (enlace "Organizador" al pie): cambiar la hora de cierre, cerrar o reabrir, borrar fotos y descargar el álbum en .zip.
   La contraseña la crea la primera persona que entra; para reiniciarla: `update public.fiesta_config set clave_hash = null;`
+- App instalable (PWA): `manifest.webmanifest` + `sw.js`. El modo organizador queda abierto en ese dispositivo hasta tocar "Salir".

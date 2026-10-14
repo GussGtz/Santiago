@@ -8,6 +8,11 @@
 <meta name="theme-color" content="#1f4f35">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Foto con Santi">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bungee&family=Caveat+Brush&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -486,7 +491,7 @@
   </section>
 </main>
 
-<footer class="pie-pagina"><button class="enlace" id="abrir-admin" type="button">Organizador</button></footer>
+<footer class="pie-pagina"><button class="enlace" id="instalar" type="button" hidden>Instalar app</button><button class="enlace" id="abrir-admin" type="button">Organizador</button></footer>
 
 <div class="tv-vista" id="tv" hidden>
   <div class="tv-escena">
@@ -1035,12 +1040,12 @@
     if (TV) pintarTV(top);
   }
 
-  /* ---------- Modo organizador (la contraseña se valida en Supabase, aquí no se guarda ninguna) ---------- */
+  /* ---------- Modo organizador (la contraseña se valida en Supabase; el celular del organizador la recuerda hasta que toque Salir) ---------- */
   var creando = false;
   function sesion(valor) {
     try {
-      if (valor === undefined) return sessionStorage.getItem('santi-organizador');
-      if (valor === null) sessionStorage.removeItem('santi-organizador'); else sessionStorage.setItem('santi-organizador', valor);
+      if (valor === undefined) return localStorage.getItem('santi-organizador');
+      if (valor === null) localStorage.removeItem('santi-organizador'); else localStorage.setItem('santi-organizador', valor);
     } catch (e) {}
     return null;
   }
@@ -1117,7 +1122,9 @@
   });
   (function () {
     var guardada = sesion();
-    if (guardada) rpc('fiesta_admin_valida', { p_clave: guardada }).then(function (ok) { if (ok === true) entrarAdmin(guardada); else sesion(null); }).catch(function () {});
+    if (!guardada) return;
+    entrarAdmin(guardada);   // la sesión sigue abierta hasta tocar "Salir"; solo se cierra sola si la contraseña cambió
+    rpc('fiesta_admin_valida', { p_clave: guardada }).then(function (ok) { if (ok !== true) salirAdmin(); }).catch(function () {});
   })();
 
   /* ---------- Descargar álbum: un .zip armado en el navegador ---------- */
@@ -1304,6 +1311,18 @@
       if (document.hidden) audio.pause(); else { escuchar(); intentar(); }
     });
   })();
+
+  /* ---------- App instalable (PWA) ---------- */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+  var instalacion = null;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); instalacion = e; $('instalar').hidden = false; });
+  window.addEventListener('appinstalled', function () { instalacion = null; $('instalar').hidden = true; });
+  $('instalar').addEventListener('click', function () {
+    if (!instalacion) return;
+    instalacion.prompt(); instalacion = null; $('instalar').hidden = true;
+  });
 
   /* ---------- Arranque ---------- */
   cargarConfig();

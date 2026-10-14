@@ -1,0 +1,17 @@
+{
+  "name": "La foto con Santi",
+  "short_name": "Foto con Santi",
+  "description": "Tómate una foto con Santi, súbela y vota. La foto con más likes gana un premio.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1f4f35",
+  "theme_color": "#1f4f35",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
