@@ -1253,83 +1253,25 @@
     };
   }
 
-  /* ---------- Música de fondo: melodía propia generada con Web Audio (sin archivos) ---------- */
+  /* ---------- Música de fondo: musica.mp3 en bucle, siempre encendida ---------- */
   (function () {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    var PASO = 60 / 126 / 2;      // corcheas a 126 pulsos por minuto
-    var ACORDES = [[48, 52, 55], [43, 47, 50], [45, 48, 52], [41, 45, 48], [48, 52, 55], [43, 47, 50], [41, 45, 48], [43, 47, 50]];
-    var MELODIA = [
-      76, 0, 79, 0, 84, 0, 79, 76,   74, 0, 79, 0, 83, 0, 79, 0,
-      72, 0, 76, 0, 81, 0, 76, 72,   81, 79, 77, 0, 81, 0, 84, 0,
-      76, 0, 79, 0, 84, 0, 88, 0,    86, 0, 83, 0, 79, 0, 83, 86,
-      84, 0, 81, 0, 77, 0, 81, 0,    83, 0, 86, 0, 79, 79, 83, 86
-    ];
-    var ARPEGIO = [0, 1, 2, 1, 3, 2, 1, 2];
-    var ctx = null, salida, ruido, paso = 0, siguiente = 0, reloj = null;
+    var audio = new Audio('musica.mp3');
+    audio.loop = true; audio.preload = 'auto'; audio.volume = 0.35;
 
-    function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
-    function nota(midi, t, dura, onda, vol) {
-      var o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = onda; o.frequency.value = hz(midi);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + dura);
-      o.connect(g); g.connect(salida); o.start(t); o.stop(t + dura + 0.02);
-    }
-    function golpe(t, dura, vol, tipo, frec) {   // platillo y palmada con ruido filtrado
-      var n = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
-      n.buffer = ruido; f.type = tipo; f.frequency.value = frec;
-      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dura);
-      n.connect(f); f.connect(g); g.connect(salida); n.start(t); n.stop(t + dura + 0.02);
-    }
-    function bombo(t) {
-      var o = ctx.createOscillator(), g = ctx.createGain();
-      o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.14);
-      g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
-      o.connect(g); g.connect(salida); o.start(t); o.stop(t + 0.2);
-    }
-    function tocar(i, t) {
-      var c = ACORDES[i >> 3], k = i & 7, tonos = [c[0], c[1], c[2], c[0] + 12];
-      if (k === 0 || k === 3) nota(c[0] - 12, t, PASO * 1.4, 'triangle', 0.5);
-      if (k === 4) nota(c[2] - 12, t, PASO * 1.4, 'triangle', 0.45);
-      if (k === 6) nota(c[0], t, PASO, 'triangle', 0.4);
-      nota(tonos[ARPEGIO[k]] + 12, t, PASO * 0.9, 'square', 0.07);
-      if (MELODIA[i]) nota(MELODIA[i], t, PASO * (MELODIA[(i + 1) % 64] ? 1 : 1.9), 'triangle', 0.32);
-      if (k === 0 || k === 4) bombo(t);
-      if (k === 2 || k === 6) golpe(t, 0.12, 0.28, 'bandpass', 1800);
-      if (k & 1) golpe(t, 0.04, 0.1, 'highpass', 7000);
-    }
-    function planear() {
-      if (siguiente < ctx.currentTime) siguiente = ctx.currentTime + 0.05;
-      while (siguiente < ctx.currentTime + 0.25) { tocar(paso, siguiente); siguiente += PASO; paso = (paso + 1) % 64; }
-    }
-    function encender() {
-      if (!ctx) {
-        ctx = new AC(); salida = ctx.createGain(); salida.gain.value = 0.16; salida.connect(ctx.destination);
-        ruido = ctx.createBuffer(1, ctx.sampleRate / 2, ctx.sampleRate);
-        var d = ruido.getChannelData(0); for (var j = 0; j < d.length; j++) d[j] = Math.random() * 2 - 1;
-      }
-      var listo = ctx.resume();
-      if (!reloj) reloj = setInterval(function () { if (ctx.state === 'running') planear(); }, 60);
-      return listo;
-    }
-
-    // Siempre encendida. Se intenta al abrir; si el navegador la bloquea (lo normal: exigen un
-    // gesto del invitado), arranca con el primer clic, toque o tecla en cualquier parte.
+    // Se intenta al abrir; si el navegador la bloquea (lo normal: exigen un gesto del invitado),
+    // arranca con el primer clic, toque o tecla en cualquier parte.
     var GESTOS = ['click', 'pointerup', 'mouseup', 'touchend', 'keydown'];
     function soltar() { GESTOS.forEach(function (g) { document.removeEventListener(g, intentar, true); }); }
-    function intentar() {
-      var listo;
-      try { listo = encender(); } catch (e) { return; }
-      if (listo && listo.then) listo.then(function () { if (ctx.state === 'running') soltar(); }, function () {});
-    }
     function escuchar() { GESTOS.forEach(function (g) { document.addEventListener(g, intentar, true); }); }
+    function intentar() {
+      if (!audio.paused) { soltar(); return; }
+      var listo = audio.play();
+      if (listo && listo.then) listo.then(soltar, function () {});
+    }
     escuchar(); intentar();
 
     document.addEventListener('visibilitychange', function () {
-      if (!ctx) return;
-      if (document.hidden) ctx.suspend(); else { escuchar(); intentar(); }
+      if (document.hidden) audio.pause(); else { escuchar(); intentar(); }
     });
   })();
 
