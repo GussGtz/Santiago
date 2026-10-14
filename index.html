@@ -368,6 +368,31 @@
     .tv-lado .lugar .quien, .tv-lado .lugar .votos { font-size: 2.2vw; } .tv-lado .lugar img { width: min(100%, 12vw); }
   }
 
+  /* Pantalla grande en un celular acostado: todo se mide con la altura visible (dvh) */
+  @media (orientation: landscape) and (max-height: 540px) {
+    .tv-vista { grid-template-columns: minmax(0, 1fr) 38vw; gap: 2vw; padding: 3dvh max(2vw, env(safe-area-inset-right)) 3dvh max(2vw, env(safe-area-inset-left)); }
+    .tv-marco { height: 92dvh; padding: 1.6dvh 1.6dvh 0; border-radius: 1.2dvh; box-shadow: 0 2dvh 5dvh rgba(0,0,0,.5); }
+    .tv-marco img { max-width: 52vw; border-radius: .6dvh; }
+    .tv-pie { gap: 2dvh; padding: 1.5dvh 1dvh 2dvh; }
+    .tv-pie strong { font-size: 7dvh; } .tv-pie span { font-size: 5.5dvh; }
+    .tv-mensaje { bottom: 14dvh; padding: 1dvh 2dvh; font-size: 5dvh; border-radius: 1.2dvh; }
+    .tv-sello { top: -2dvh; left: -2dvh; font-size: 5.5dvh; border-width: .6dvh; border-radius: 1.2dvh; }
+    .tv-vacio { font-size: 7dvh; }
+    .tv-lado { gap: 2.4dvh; }
+    .tv-lado .portada { display: none; }
+    .tv-qr { grid-template-columns: 24dvh minmax(0, 1fr); gap: 2dvh; padding: 2dvh; border-radius: 2dvh; box-shadow: 0 1dvh 0 var(--sombra); }
+    .tv-qr strong { font-size: 6dvh; } .tv-qr span { margin-top: 1dvh; font-size: 3dvh; }
+    .tv-reloj { padding: .8dvh 2dvh 1.4dvh; border-width: .5dvh; border-radius: 2dvh; }
+    .tv-reloj small { font-size: 4dvh; } .tv-reloj b { font-size: min(8cqw, 8dvh); }
+    .tv-lado .podio-caja { gap: 1.5dvh; }
+    .tv-lado .lugar { gap: .5dvh; }
+    .tv-lado .lugar img { width: min(100%, 15dvh); border-width: .8dvh; box-shadow: 0 .8dvh 0 var(--sombra); }
+    .tv-lado .lugar .quien { max-width: 100%; font-size: 3.4dvh; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tv-lado .lugar .votos { font-size: 3dvh; }
+    .tv-lado .lugar .base { font-size: 5dvh; border-radius: 1.5dvh 1.5dvh 0 0; }
+    .tv-lado .lugar[data-lugar="1"] { --h: 10dvh; } .tv-lado .lugar[data-lugar="2"] { --h: 7.5dvh; } .tv-lado .lugar[data-lugar="3"] { --h: 5dvh; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .globos, .balones { display: none; }
@@ -1196,6 +1221,11 @@
     };
     document.head.appendChild(qr);
     reiniciarRelojTV();
+    $('tv').addEventListener('click', function () {
+      var raiz = document.documentElement, pedir = raiz.requestFullscreen || raiz.webkitRequestFullscreen;
+      if (!pedir || document.fullscreenElement || document.webkitFullscreenElement) return;
+      try { var r = pedir.call(raiz); if (r && r.catch) r.catch(function () {}); } catch (e) {}
+    });
   }
 
   /* ---------- En vivo: Supabase Realtime avisa de cada foto y cada like al instante ---------- */
