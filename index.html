@@ -341,7 +341,8 @@
   .tv-mensaje { position: absolute; left: 3%; right: 3%; bottom: 9vw; margin: 0; padding: .5vw 1vw; background: rgba(29,29,27,.82); color: var(--cal); font-family: var(--f-mano); font-size: 2.4vw; line-height: 1.15; border-radius: .6vw; text-align: center; }
   .tv-sello { position: absolute; top: -1.5vw; left: -1.5vw; padding: .3em .9em .2em; background: var(--oro); color: var(--tinta); font-family: var(--f-nombre); font-size: 2.6vw; border: .3vw solid var(--tinta); border-radius: .6vw; rotate: -6deg; animation: late 1.2s ease-in-out infinite; }
   .tv-vacio { font-family: var(--f-mano); font-size: 3vw; color: var(--cal-suave); text-align: center; }
-  .tv-lado { min-height: 0; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr); gap: 1.4vw; align-content: start; }
+  .tv-lado { min-height: 0; display: flex; flex-direction: column; gap: 1.4vw; container-type: inline-size; overflow: hidden; }
+  .tv-lado > * { flex: none; }
   .tv-lado .portada { padding: 0; }
   .tv-lado .portada h1 { font-size: 2.4vw; margin-top: .8vw; }
   .tv-lado .portada h1 b { font-size: 4.6vw; }
@@ -350,15 +351,19 @@
   .tv-qr svg, .tv-qr img { display: block; width: 100%; height: auto; }
   .tv-qr strong { display: block; font-family: var(--f-titulo); font-weight: 400; font-size: 2.3vw; line-height: 1; color: var(--pasto); }
   .tv-qr span { display: block; margin-top: .4vw; font-size: 1.05vw; font-weight: 600; overflow-wrap: anywhere; }
-  .tv-reloj { margin: 0; text-align: center; font-family: var(--f-nombre); font-size: 2vw; color: var(--oro); background: var(--tinta); border-radius: 1vw; padding: .5vw; font-variant-numeric: tabular-nums; }
-  .tv-reloj:empty { display: none; }
-  .tv-lado .podio-caja { max-width: none; margin: 0; align-self: end; }
+  .tv-reloj { margin: 0; padding: .6vw 1vw .8vw; text-align: center; background: var(--tinta); border: .2vw solid var(--oro); border-radius: 1vw; white-space: nowrap; }
+  .tv-reloj small { display: block; font-family: var(--f-titulo); font-size: 5cqw; letter-spacing: .08em; line-height: 1.2; color: var(--cal-suave); }
+  .tv-reloj b { display: block; font-family: var(--f-nombre); font-weight: 400; font-size: 8cqw; line-height: 1.15; color: var(--oro); font-variant-numeric: tabular-nums; }
+  .tv-lado .podio-caja { max-width: none; width: 100%; margin: auto 0 0; }
+  .tv-lado .lugar[data-lugar="1"] { --h: 9vh; } .tv-lado .lugar[data-lugar="2"] { --h: 6.5vh; } .tv-lado .lugar[data-lugar="3"] { --h: 4.5vh; }
+  .tv-lado .lugar .base { font-size: 3.4vh; }
   .tv-lado .lugar .quien { font-size: 1.2vw; } .tv-lado .lugar .votos { font-size: 1.1vw; }
-  .tv-lado .lugar img { width: min(100%, 7vw); }
+  .tv-lado .lugar img { width: min(100%, 7vw, 12vh); }
+  @media (min-aspect-ratio: 19/10) { .tv-lado .portada { display: none; } }   /* ventanas muy bajas: se quita el título para que quepa el podio */
   @media (max-aspect-ratio: 1/1) {
     .tv-vista { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; }
     .tv-marco { height: 55vh; } .tv-marco img { max-width: 90vw; }
-    .tv-lado { grid-template-rows: auto; grid-template-columns: 1fr 1fr; } .tv-lado .portada, .tv-reloj { display: none; }
+    .tv-lado { display: grid; grid-template-columns: 1fr 1fr; align-items: end; overflow: visible; } .tv-lado .portada, .tv-reloj { display: none; }
     .tv-pie strong { font-size: 6vw; } .tv-pie span { font-size: 5vw; } .tv-qr strong { font-size: 4vw; } .tv-qr span { font-size: 2.2vw; }
     .tv-lado .lugar .quien, .tv-lado .lugar .votos { font-size: 2.2vw; } .tv-lado .lugar img { width: min(100%, 12vw); }
   }
@@ -471,7 +476,7 @@
   <aside class="tv-lado">
     <div class="portada"><span class="cinta">Dinámica de la fiesta</span><h1>La foto con <b>Santi</b></h1></div>
     <div class="tv-qr"><div id="tv-qr"></div><p><strong>Escanea y sube tu foto con Santi</strong><span id="tv-url"></span></p></div>
-    <p class="tv-reloj" id="tv-reloj"></p>
+    <p class="tv-reloj" id="tv-reloj-caja" hidden><small>La votación cierra en</small><b id="tv-reloj"></b></p>
     <div class="podio-caja" id="tv-podio"></div>
   </aside>
 </div>
@@ -934,7 +939,7 @@
       $('reloj').classList.toggle('urgente', s < 300);
     }
     $('reloj').hidden = !texto;
-    $('tv-reloj').textContent = texto ? 'Cierra en ' + texto : '';
+    $('tv-reloj').textContent = texto; $('tv-reloj-caja').hidden = !texto;
     if (estaba === cerrada) return;
     document.body.classList.toggle('cerrada', cerrada);
     pintar();
