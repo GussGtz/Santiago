@@ -297,6 +297,13 @@
   .subir textarea { font: inherit; font-weight: 400; padding: .7em .9em; border: 2px solid var(--pasto-claro); border-radius: .7rem; background: #fff; color: var(--tinta); min-width: 0; resize: vertical; }
   .subir .campo small { font-weight: 400; color: #4a5a50; }
 
+  /* SweetAlert con la tipografía y colores del sitio */
+  .swal2-popup { font-family: var(--f-texto); border-radius: 1rem; border: 3px solid var(--oro); background: var(--cal); color: var(--tinta); }
+  .swal2-title { font-family: var(--f-titulo); font-weight: 400; font-size: 1.9rem; letter-spacing: .04em; color: var(--pasto); }
+  .swal2-styled { border-radius: 999px !important; font-weight: 700; }
+  .swal2-toast { border-width: 2px; }
+  .swal2-toast .swal2-title { font-family: var(--f-texto); font-weight: 700; font-size: 1rem; letter-spacing: 0; color: var(--tinta); }
+
   /* Organizador */
   .pie-pagina { position: relative; z-index: 1; text-align: center; padding: 0 1rem 2rem; }
   .enlace { border: 0; background: none; color: var(--cal-suave); font: 600 .85rem var(--f-texto); text-decoration: underline; cursor: pointer; padding: .6rem; }
@@ -413,7 +420,7 @@
 
   <section class="subir" aria-labelledby="t-subir">
     <h2 id="t-subir">Sube tu foto</h2>
-    <form id="form">
+    <form id="form" novalidate>
       <label class="elegir" id="elegir">
         <input class="oculto-visual" type="file" id="archivo" accept="image/*">
         <span id="elegir-texto"><svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/></svg>Toca para tomar o elegir la foto<br><small>Cámara o galería</small></span>
@@ -507,6 +514,7 @@
   <form method="dialog"><button class="boton">Cerrar</button></form>
 </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
 <script>
 (function () {
   // Mismo proyecto de Supabase que la invitación. Antes de usarlo, corre supabase.sql una vez.
@@ -778,7 +786,10 @@
   var archivo = $('archivo'), previa = $('previa'), aviso = $('aviso'), enviar = $('enviar'), nombre = $('nombre');
   nombre.value = leer('santi-nombre') || '';
 
-  function avisar(texto, tipo) { aviso.textContent = texto; aviso.className = 'aviso ' + (tipo || ''); aviso.hidden = !texto; }
+  function avisar(texto, tipo) {
+    aviso.textContent = texto; aviso.className = 'aviso ' + (tipo || ''); aviso.hidden = !texto;
+    if (texto && tipo === 'error' && window.Swal) Swal.fire({ toast: true, position: 'top', icon: 'warning', title: texto, timer: 3500, showConfirmButton: false });
+  }
 
   archivo.addEventListener('change', function () {
     var f = archivo.files[0];
@@ -865,6 +876,20 @@
   var MAX_FOTOS = 2, TV = /[?&]tv=1(&|$)/.test(location.search);
   var cierre = null, cerrada = false, configLista = false, clave = null;
 
+  function alerta(titulo, texto, icono) {
+    if (!window.Swal) { alert(titulo + (texto ? '\n' + texto : '')); return Promise.resolve(); }
+    return Swal.fire({ title: titulo, text: texto || '', icon: icono || 'info', confirmButtonText: 'Entendido', confirmButtonColor: '#2f7a4f' });
+  }
+  function confirmar(titulo, texto, boton) {
+    if (!window.Swal) return Promise.resolve(confirm(titulo + '\n' + texto));
+    return Swal.fire({
+      title: titulo, text: texto, icon: 'warning', showCancelButton: true, reverseButtons: true, focusCancel: true,
+      confirmButtonText: boton, cancelButtonText: 'Cancelar', confirmButtonColor: '#b3261e', cancelButtonColor: '#6b7a70'
+    }).then(function (r) { return r.isConfirmed; });
+  }
+  function listo(texto) {
+    if (window.Swal) Swal.fire({ toast: true, position: 'top', icon: 'success', title: texto, timer: 2600, timerProgressBar: true, showConfirmButton: false });
+  }
   function dos(n) { return (n < 10 ? '0' : '') + n; }
   function plural(n, uno, varios) { return n + ' ' + (n === 1 ? uno : varios); }
   function suave() { return sinMovimiento ? 'auto' : 'smooth'; }
@@ -999,16 +1024,19 @@
     if (document.activeElement !== $('adm-cierre')) $('adm-cierre').value = cierre === null ? '' : horaLocal(cierre);
   }
   function errorAdmin(e) {
-    if (/clave incorrecta/.test(e && e.message)) { salirAdmin(); alert('La contraseña ya no es válida. Vuelve a entrar al modo organizador.'); }
-    else alert('No se pudo completar. Revisa tu conexión e inténtalo de nuevo.');
+    if (/clave incorrecta/.test(e && e.message)) { salirAdmin(); alerta('Contraseña no válida', 'Vuelve a entrar al modo organizador.', 'error'); }
+    else alerta('No se pudo completar', 'Revisa tu conexión e inténtalo de nuevo.', 'error');
   }
-  function fijarCierre(iso) {
-    return rpc('fiesta_admin_cierre', { p_clave: clave, p_cierre: iso }).then(function () { ponerCierre(iso); }).catch(errorAdmin);
+  function fijarCierre(iso, aviso) {
+    return rpc('fiesta_admin_cierre', { p_clave: clave, p_cierre: iso }).then(function () { ponerCierre(iso); listo(aviso); }).catch(errorAdmin);
   }
   function borrarFoto(f) {
-    if (!clave || !confirm('¿Borrar la foto de ' + f.nombre + '? No se puede deshacer.')) return;
-    rpc('fiesta_admin_borrar', { p_clave: clave, p_foto: f.id }).then(function () {
-      fotos = fotos.filter(function (x) { return x.id !== f.id; }); pintar();
+    if (!clave) return;
+    confirmar('¿Borrar la foto de ' + f.nombre + '?', 'Desaparece para todos y no se puede deshacer.', 'Sí, borrar').then(function (si) {
+      if (!si) return;
+      return rpc('fiesta_admin_borrar', { p_clave: clave, p_foto: f.id }).then(function () {
+        fotos = fotos.filter(function (x) { return x.id !== f.id; }); pintar(); listo('Foto borrada');
+      });
     }).catch(errorAdmin);
   }
 
@@ -1026,7 +1054,7 @@
       $('adm-clave').autocomplete = creando ? 'new-password' : 'current-password';
       $('dlg-error').hidden = true;
       $('dlg-admin').showModal();
-    }).catch(function () { alert('No se pudo conectar. Inténtalo de nuevo.'); });
+    }).catch(function () { alerta('No se pudo conectar', 'Inténtalo de nuevo.', 'error'); });
   });
   $('dlg-cancelar').addEventListener('click', function () { $('dlg-admin').close(); });
   $('dlg-form').addEventListener('submit', function (e) {
@@ -1048,14 +1076,14 @@
   $('adm-salir').addEventListener('click', salirAdmin);
   $('adm-guardar').addEventListener('click', function () {
     var d = new Date($('adm-cierre').value);
-    if (isNaN(d.getTime())) { alert('Elige la fecha y la hora de cierre.'); return; }
-    fijarCierre(d.toISOString());
+    if (isNaN(d.getTime())) { alerta('Falta la hora', 'Elige la fecha y la hora de cierre.', 'warning'); return; }
+    fijarCierre(d.toISOString(), 'Hora de cierre guardada');
   });
   $('adm-cerrar-ya').addEventListener('click', function () {
-    if (confirm('¿Cerrar la votación ahora? Se bloquean los likes y aparece la foto ganadora.')) fijarCierre(new Date().toISOString());
+    confirmar('¿Cerrar la votación ahora?', 'Se bloquean los likes y aparece la foto ganadora.', 'Sí, cerrar').then(function (si) { if (si) fijarCierre(new Date().toISOString(), 'Votación cerrada'); });
   });
   $('adm-abrir').addEventListener('click', function () {
-    if (confirm('¿Quitar la hora de cierre? La votación queda abierta hasta que pongas otra.')) fijarCierre(null);
+    confirmar('¿Quitar la hora de cierre?', 'La votación queda abierta hasta que pongas otra hora.', 'Sí, quitar').then(function (si) { if (si) fijarCierre(null, 'Votación abierta, sin hora de cierre'); });
   });
   (function () {
     var guardada = sesion();
@@ -1095,7 +1123,7 @@
   }
   $('adm-album').addEventListener('click', function () {
     var boton = $('adm-album'), enOrden = ranking(), archivos = [], notas = ['Fotos con Santi', ''], cadena = Promise.resolve();
-    if (!enOrden.length) { alert('Todavía no hay fotos.'); return; }
+    if (!enOrden.length) { alerta('Todavía no hay fotos', 'Cuando suban alguna podrás descargar el álbum.'); return; }
     boton.disabled = true;
     enOrden.forEach(function (f, i) {
       cadena = cadena.then(function () {
@@ -1117,7 +1145,8 @@
       a.href = url; a.download = 'fotos-con-santi.zip';
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
-    }).catch(function () { alert('No se pudo armar el álbum. Revisa tu conexión e inténtalo de nuevo.'); })
+      listo('Álbum descargado');
+    }).catch(function () { alerta('No se pudo armar el álbum', 'Revisa tu conexión e inténtalo de nuevo.', 'error'); })
       .then(function () { boton.disabled = false; boton.textContent = 'Descargar álbum'; });
   });
 
